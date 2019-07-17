@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
     mode: process.env.NODE_ENV || 'development',
     entry: {
-        'animation-paint': './src/animation-paint.js',
-        'app': './src/app.js',
+        sasasak: './src/sasasak.js',
+        app: './src/app.js',
     },
     output: {
         publicPath: '',
@@ -19,8 +19,9 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Animation - Paint',
+            title: 'Animation - SaSaSak',
             filename: path.resolve(__dirname, 'dist/index.html'),
+            template: 'src/index.html',
         }),
     ],
     stats: 'minimal',
