@@ -1,3 +1,7 @@
 const SaSaSakJs = require('./sasasak')
 
-new SaSaSakJs(document.getElementById('btn'))
+const sasasak = new SaSaSakJs(document.querySelector('.sasasak'))
+
+document.querySelector('#btn').addEventListener('click', () => {
+    sasasak.play()
+})
