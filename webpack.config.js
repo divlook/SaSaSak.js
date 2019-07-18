@@ -8,20 +8,20 @@ module.exports = {
         app: './src/app.js',
     },
     output: {
-        publicPath: '',
+        publicPath: process.env.PUBLIC_PATH || '',
         filename: 'js/[name].min.js',
-        path: path.resolve(__dirname, 'docs'),
+        path: path.resolve(__dirname, 'dist'),
     },
     devServer: {
         port: 3000,
         hot: true,
         open: true,
-        contentBase: path.join(__dirname, 'docs'),
+        contentBase: path.join(__dirname, 'dist'),
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Animation - SaSaSak',
-            filename: path.resolve(__dirname, 'docs/index.html'),
+            filename: path.resolve(__dirname, 'dist/index.html'),
             template: 'src/index.html',
         }),
     ],
