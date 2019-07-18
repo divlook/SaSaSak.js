@@ -3,58 +3,37 @@ const html2canvas = require('html2canvas')
 class SaSaSakJs {
     constructor(el, option = null) {
         let hasOption = option && typeof option === 'object'
-
+        this.isMounted = false
+        this.isPlaying = false
         this.el = el
         this.wrapEl = null
-        this.oriCanvas = null
-        this.img = null
         this.canvas = null
+        this.ctx = null
         this.option = {}
         this.defaultWrapStyle = {
             display: 'inline-flex',
             position: 'relative',
         }
+        this.lineMaxLength = 0
+        this.lineMinLength = 0
+        this.lastRotate = 0
 
         if (hasOption) {
             if (option.wrapStyle && typeof option.wrapStyle === 'object') this.option.wrapStyle = option.wrapStyle
         }
 
         this.init()
-
-        setTimeout(() => {
-            this.updateImg((canvas => {
-                let ctx = canvas.getContext('2d')
-                ctx.save()
-                // Create a shape, of some sort
-                ctx.beginPath()
-                ctx.moveTo(30, 30)
-                ctx.lineTo(100, 30)
-                ctx.lineTo(130, 10)
-                ctx.lineTo(160, 60)
-                ctx.arcTo(40, 70, 120, 0, 10)
-                ctx.lineTo(160, 130)
-                ctx.lineTo(100, 150)
-                ctx.lineTo(70, 130)
-                ctx.lineTo(20, 130)
-                ctx.lineTo(50, 70)
-                ctx.closePath()
-                // Clip to the current path
-                ctx.clip()
-                ctx.drawImage(this.img, 0, 0)
-                // Undo the clipping
-                ctx.restore()
-            }))
-        }, 2000)
     }
 
     async init() {
         if (this.el) {
             this.createWrapper()
             await this.createCanvas()
-            this.createImg()
         }
+        this.isMounted = true
     }
     createWrapper() {
+        if (this.isMounted) return
         this.wrapEl = document.createElement('div')
         let wrapStyle = {
             ...this.wrapEl.style,
@@ -68,63 +47,88 @@ class SaSaSakJs {
         this.el.parentNode.insertBefore(this.wrapEl, this.el)
         this.wrapEl.appendChild(this.el)
     }
-    async createCanvas() {
-        this.oriCanvas = await html2canvas(this.el, {
-            width: this.wrapEl.clientWidth,
-            height: this.wrapEl.clientHeight,
-        }).then(canvas => {
-            return canvas
+    createCanvas() {
+        return new Promise(resolve => {
+            if (this.isMounted) {
+                resolve()
+                return
+            }
+            html2canvas(this.el, {
+                width: this.wrapEl.clientWidth,
+                height: this.wrapEl.clientHeight,
+            }).then(canvas => {
+                let img = new Image()
+                img.width = this.wrapEl.clientWidth
+                img.height = this.wrapEl.clientHeight
+                img.onload = () => {
+                    this.canvas = document.createElement('canvas')
+                    this.canvas.width = this.wrapEl.clientWidth * window.devicePixelRatio
+                    this.canvas.height = this.wrapEl.clientHeight * window.devicePixelRatio
+                    this.canvas.style.width = this.wrapEl.clientWidth + 'px'
+                    this.canvas.style.height = this.wrapEl.clientHeight + 'px'
+                    this.lineMaxLength = Math.max(this.canvas.width, this.canvas.height)
+                    this.lineMinLength = Math.min(this.canvas.width, this.canvas.height)
+                    this.ctx = this.canvas.getContext('2d')
+                    this.ctx.drawImage(img, 0, 0)
+                    this.ctx.lineCap = 'round'
+                    this.ctx.globalCompositeOperation = 'destination-out'
+                    this.wrapEl.removeChild(this.el)
+                    this.wrapEl.appendChild(this.canvas)
+                    resolve()
+                }
+                img.src = canvas.toDataURL()
+            })
         })
     }
-    createImg() {
-        this.img = new Image()
-        this.img.width = this.wrapEl.clientWidth
-        this.img.height = this.wrapEl.clientHeight
-        this.img.onload = () => {
-            this.canvas = document.createElement('canvas')
-            this.canvas.width = this.wrapEl.clientWidth * window.devicePixelRatio
-            this.canvas.height = this.wrapEl.clientHeight * window.devicePixelRatio
-            this.canvas.style.width = this.wrapEl.clientWidth + 'px'
-            this.canvas.style.height = this.wrapEl.clientHeight + 'px'
-
-            let ctx = this.canvas.getContext('2d')
-            ctx.save()
-            // Create a shape, of some sort
-            ctx.beginPath()
-            ctx.moveTo(10, 10)
-            ctx.lineTo(100, 30)
-            ctx.lineTo(130, 10)
-            ctx.lineTo(160, 60)
-            ctx.arcTo(130, 70, 120, 0, 10)
-            ctx.lineTo(160, 130)
-            ctx.lineTo(100, 150)
-            ctx.lineTo(70, 130)
-            ctx.lineTo(20, 130)
-            ctx.lineTo(50, 70)
-            ctx.closePath()
-            // Clip to the current path
-            ctx.clip()
-            ctx.drawImage(this.img, 0, 0)
-            // Undo the clipping
-            ctx.restore()
-
-            this.wrapEl.removeChild(this.el)
-            this.wrapEl.appendChild(this.canvas)
+    play(cnt = 30, isClick = true) {
+        if (isClick && this.isPlaying) {
+            return
+        } else if (isClick && !this.isPlaying) {
+            this.isPlaying = true
         }
-        this.img.src = this.oriCanvas.toDataURL()
+
+        let random = Math.random()
+        let _percent = Math.floor(random * 100) % 20 + 1
+        let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
+        let _zero = Math.pow(10, (this.lineMinLength.toString().length))
+
+        let lineWidth = Math.floor(random * 100) % 4 + 1
+        let lineLength = this.lineMaxLength + Math.floor(this.lineMaxLength / 100) * _percent * _plusMinus
+        let x = Math.floor(random * _zero) % this.lineMinLength * _percent * _plusMinus + 1
+        let y = Math.floor(random * _zero) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * _percent
+
+        this.ctx.lineWidth = lineWidth
+        this.ctx.beginPath()
+        this.ctx.moveTo(x, y)
+        this.ctx.lineTo(lineLength, y)
+        if (this.lastRotate) this.ctx.rotate(-1 * this.lastRotate)
+        this.lastRotate = (365 - (Math.floor(random * 100) % 10 + 20)) * Math.PI / 180
+        this.ctx.rotate(this.lastRotate)
+        this.ctx.stroke()
+        this.ctx.closePath()
+
+        if (cnt > 0) {
+            cnt--
+            setTimeout(() => {
+                this.play(cnt, false)
+            }, 30)
+        } else if (!this.checkEmptyCanvas()) {
+            setTimeout(() => {
+                this.play(30, false)
+            }, 30)
+        } else {
+            this.isPlaying = false
+        }
     }
-    updateImg(setPath = (canvas) => null) {
-        let canvas = document.createElement('canvas')
-        canvas.width = this.wrapEl.clientWidth * window.devicePixelRatio
-        canvas.height = this.wrapEl.clientHeight * window.devicePixelRatio
-        canvas.style.width = this.wrapEl.clientWidth + 'px'
-        canvas.style.height = this.wrapEl.clientHeight + 'px'
+    checkEmptyCanvas() {
+        let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
+        let total = imageData.data.length
+        let remainingPixels = imageData.data.filter(row => row !== 0).length
 
-        if (typeof setPath === 'function') {
-            setPath(canvas)
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(`total: ${total}\nremainingPixels: ${remainingPixels}\nend: ${total * 0.1 > remainingPixels}\n`)
         }
-
-        this.wrapEl.replaceChild(canvas, this.canvas)
+        return total * 0.1 > remainingPixels
     }
 }
 
