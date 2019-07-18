@@ -30,11 +30,13 @@ class SaSaSakJs {
             this.createWrapper()
             await this.createCanvas()
         }
+        this.wrapEl.classList.add('sasasak-mounted')
         this.isMounted = true
     }
     createWrapper() {
         if (this.isMounted) return
         this.wrapEl = document.createElement('div')
+        this.wrapEl.classList.add('sasasak')
         let wrapStyle = {
             ...this.wrapEl.style,
             ...this.defaultWrapStyle,
@@ -80,42 +82,46 @@ class SaSaSakJs {
             })
         })
     }
-    play(cnt = 30, isClick = true) {
-        if (isClick && this.isPlaying) {
+    play(cnt = 10, isClick = true) {
+        if (this.isMounted && isClick && this.isPlaying) {
             return
         } else if (isClick && !this.isPlaying) {
             this.isPlaying = true
         }
 
-        let random = Math.random()
-        let _percent = Math.floor(random * 100) % 20 + 1
-        let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
-        let _zero = Math.pow(10, (this.lineMinLength.toString().length))
+        cnt--
 
-        let lineWidth = Math.floor(random * 100) % 4 + 1
-        let lineLength = this.lineMaxLength + Math.floor(this.lineMaxLength / 100) * _percent * _plusMinus
-        let x = Math.floor(random * _zero) % this.lineMinLength * _percent * _plusMinus + 1
-        let y = Math.floor(random * _zero) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * _percent
+        for (let index = 0; index < 100; index++) {
+            let random = Math.random()
+            let _percent = Math.floor(random * 100) % 20 + 1
+            let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
+            let _zero = Math.pow(10, (this.lineMinLength.toString().length))
 
-        this.ctx.lineWidth = lineWidth
-        this.ctx.beginPath()
-        this.ctx.moveTo(x, y)
-        this.ctx.lineTo(lineLength, y)
-        if (this.lastRotate) this.ctx.rotate(-1 * this.lastRotate)
-        this.lastRotate = (365 - (Math.floor(random * 100) % 10 + 20)) * Math.PI / 180
-        this.ctx.rotate(this.lastRotate)
-        this.ctx.stroke()
-        this.ctx.closePath()
+            let lineWidth = Math.floor(random * 100) % 3 + 1
+            let lineLength = this.lineMinLength + Math.floor(this.lineMinLength / 100) * _percent * _plusMinus
+            let x = Math.floor(random * _zero) % this.lineMinLength * _percent * _plusMinus + 1
+            let y = Math.floor(random * _zero) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * _percent
+            let lineRotate = (365 - (Math.floor(random * 100) % 15 + 20)) * Math.PI / 180
+
+            this.ctx.lineWidth = lineWidth
+            this.ctx.beginPath()
+            this.ctx.moveTo(x, y)
+            this.ctx.lineTo(lineLength, y)
+            if (this.lastRotate) this.ctx.rotate(-1 * this.lastRotate)
+            this.lastRotate = lineRotate
+            this.ctx.rotate(this.lastRotate)
+            this.ctx.stroke()
+            this.ctx.closePath()
+        }
 
         if (cnt > 0) {
-            cnt--
             setTimeout(() => {
                 this.play(cnt, false)
-            }, 30)
+            }, 10)
         } else if (!this.checkEmptyCanvas()) {
             setTimeout(() => {
-                this.play(30, false)
-            }, 30)
+                this.play(10, false)
+            }, 10)
         } else {
             this.isPlaying = false
         }
