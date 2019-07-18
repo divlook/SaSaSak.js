@@ -1,6 +1,6 @@
 const html2canvas = require('html2canvas')
 
-class AnimationPaint {
+class SaSaSakJs {
     constructor(el, option = null) {
         let hasOption = option && typeof option === 'object'
 
@@ -128,5 +128,14 @@ class AnimationPaint {
     }
 }
 
-if (typeof window.AnimationPaint !== 'function') window.AnimationPaint = AnimationPaint
-module.exports = AnimationPaint
+if (typeof window.SaSaSakJs === 'undefined') {
+    window.SaSaSakJs = SaSaSakJs
+} else {
+    let currentAt = Date.now()
+    let className = `SaSaSakJs_${currentAt}`
+    window[className] = SaSaSakJs
+
+    console.log(`'SaSaSakJs' has already been declared`)
+    console.log(`be use '${className}' instead of 'SaSaSakJs'`)
+}
+module.exports = SaSaSakJs

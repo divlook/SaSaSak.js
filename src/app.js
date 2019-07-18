@@ -1,3 +1,3 @@
-const AnimationPaint = require('./sasasak')
+const SaSaSakJs = require('./sasasak')
 
-new AnimationPaint(document.getElementById('btn'))
+new SaSaSakJs(document.getElementById('btn'))
