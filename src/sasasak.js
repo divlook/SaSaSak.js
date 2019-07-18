@@ -82,16 +82,17 @@ class SaSaSakJs {
             })
         })
     }
-    play(cnt = 3, isClick = true) {
+    play(cnt = 1, isClick = true) {
         if (isClick && (!this.isMounted || this.isPlaying)) {
             return
         } else if (isClick && !this.isPlaying) {
             this.isPlaying = true
         }
 
-        cnt--
+        cnt += 100
+        if (cnt > 5000) cnt = 5000
 
-        for (let index = 0; index < 1000; index++) {
+        for (let index = 0; index < cnt; index++) {
             let random = Math.random()
             let _percent = Math.floor(random * 100) % 20 + 1
             let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
@@ -115,27 +116,27 @@ class SaSaSakJs {
             this.ctx.closePath()
         }
 
-        if (cnt > 0) {
+        cnt += Math.floor(cnt * 1.5)
+
+        if (!this.checkEmptyCanvas()) {
+            let ms = 1000 - cnt < 0 ? 150 : 1000 - Math.floor(cnt)
             setTimeout(() => {
                 this.play(cnt, false)
-            }, 100)
-        } else if (!this.checkEmptyCanvas()) {
-            setTimeout(() => {
-                this.play(3, false)
-            }, 500)
+            }, ms)
         } else {
             this.isPlaying = false
         }
     }
     checkEmptyCanvas() {
         let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
-        let total = imageData.data.length
-        let remainingPixels = imageData.data.filter(row => row !== 0).length
+        let alphas = imageData.data.filter((row, key) => (key + 1) % 4 === 0)
+        let total = alphas.length
+        let remainingPixels = alphas.filter(row => row > 25).length
 
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`total: ${total}\nremainingPixels: ${remainingPixels}\nend: ${total * 0.6 > remainingPixels}\n`)
+            console.log(`total: ${total}\nremainingPixels: ${remainingPixels}\nend: ${total * 0.4 > remainingPixels}\n`)
         }
-        return total * 0.6 > remainingPixels
+        return total * 0.4 > remainingPixels
     }
 }
 
