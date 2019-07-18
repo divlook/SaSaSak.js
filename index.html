@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Animation - SaSaSak</title>
+        <style>
+            body {
+                padding: 20px;
+            }
+            .play-zone .sasasak {
+                overflow: hidden;
+            }
+            .play-zone .sasasak.sasasak-mounted::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 0;
+                background-image: url('/nayeon.gif');
+                background-size: cover;
+                background-position: center;
+            }
+            .play-zone .sasasak.sasasak-mounted canvas {
+                position: relative;
+                z-index: 1;
+            }
+            #btn {
+                padding: 10px;
+                border-radius: 4px;
+                background-color: #f5da55;
+                border: 0;
+                outline: none;
+                font-weight: 600;
+                font-size: 12px;
+                color: #333;
+                border: 1px solid #999;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="play-zone">
+            <div class="sasasak">
+                <img src="/sehoon.jpg" width="300px">
+            </div>
+            <button id="btn">SaSaSak!</button>
+        </div>
+    <script type="text/javascript" src="SaSaSak.js/js/sasasak.min.js"></script><script type="text/javascript" src="SaSaSak.js/js/app.min.js"></script></body>
+</html>
