@@ -7,7 +7,7 @@
     "start": "serve dist",
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
-    "predeploy": "cross-env NODE_ENV=production PUBLIC_PATH=SaSaSak.js BUILD_PATH=build npm run build",
+    "predeploy": "cross-env NODE_ENV=production BUILD_PATH=build npm run build",
     "deploy": "gh-pages -d build"
   },
   "author": "uihyeon.cha",
