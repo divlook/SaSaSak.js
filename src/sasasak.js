@@ -82,8 +82,8 @@ class SaSaSakJs {
             })
         })
     }
-    play(cnt = 10, isClick = true) {
-        if (this.isMounted && isClick && this.isPlaying) {
+    play(cnt = 3, isClick = true) {
+        if (isClick && (!this.isMounted || this.isPlaying)) {
             return
         } else if (isClick && !this.isPlaying) {
             this.isPlaying = true
@@ -91,18 +91,19 @@ class SaSaSakJs {
 
         cnt--
 
-        for (let index = 0; index < 100; index++) {
+        for (let index = 0; index < 1000; index++) {
             let random = Math.random()
             let _percent = Math.floor(random * 100) % 20 + 1
             let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
             let _zero = Math.pow(10, (this.lineMinLength.toString().length))
 
-            let lineWidth = Math.floor(random * 100) % 3 + 1
-            let lineLength = this.lineMinLength + Math.floor(this.lineMinLength / 100) * _percent * _plusMinus
-            let x = Math.floor(random * _zero) % this.lineMinLength * _percent * _plusMinus + 1
-            let y = Math.floor(random * _zero) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * _percent
-            let lineRotate = (365 - (Math.floor(random * 100) % 15 + 20)) * Math.PI / 180
+            let lineWidth = this.lineMinLength * 0.3 * Math.floor(random * 10) % 3
+            let lineLength = this.lineMinLength + this.lineMinLength * (_percent/100) * _plusMinus
+            let x = Math.floor(random * _zero) % this.lineMinLength * (_percent/100) * -2
+            let y = Math.floor(random * _zero) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * (_percent/100)
+            let lineRotate = (365 - (Math.floor(random * 100) % 20 + 20)) * Math.PI / 180
 
+            this.ctx.globalAlpha = Math.floor(random * 10) / 10;
             this.ctx.lineWidth = lineWidth
             this.ctx.beginPath()
             this.ctx.moveTo(x, y)
@@ -117,11 +118,11 @@ class SaSaSakJs {
         if (cnt > 0) {
             setTimeout(() => {
                 this.play(cnt, false)
-            }, 10)
+            }, 100)
         } else if (!this.checkEmptyCanvas()) {
             setTimeout(() => {
-                this.play(10, false)
-            }, 10)
+                this.play(3, false)
+            }, 500)
         } else {
             this.isPlaying = false
         }
@@ -132,9 +133,9 @@ class SaSaSakJs {
         let remainingPixels = imageData.data.filter(row => row !== 0).length
 
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`total: ${total}\nremainingPixels: ${remainingPixels}\nend: ${total * 0.1 > remainingPixels}\n`)
+            console.log(`total: ${total}\nremainingPixels: ${remainingPixels}\nend: ${total * 0.6 > remainingPixels}\n`)
         }
-        return total * 0.1 > remainingPixels
+        return total * 0.6 > remainingPixels
     }
 }
 
