@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const buildPath = path.resolve(__dirname, process.env.BUILD_PATH || 'dist')
 
 module.exports = {
@@ -23,8 +24,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Animation - SaSaSak',
             filename: path.join(buildPath, 'index.html'),
-            template: 'src/index.html',
+            template: 'public/index.html',
         }),
+        new CopyPlugin([
+            { from: 'public', to: buildPath },
+        ]),
     ],
     stats: 'minimal',
 }
