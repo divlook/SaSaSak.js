@@ -1,6 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const buildPath = path.resolve(__dirname, process.env.BUILD_PATH || 'dist')
 
 module.exports = {
@@ -21,6 +22,7 @@ module.exports = {
         contentBase: buildPath,
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             title: 'Animation - SaSaSak',
             filename: path.join(buildPath, 'index.html'),
