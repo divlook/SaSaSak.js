@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const buildPath = path.resolve(__dirname, process.env.BUILD_PATH || 'dist')
 
 module.exports = {
     mode: process.env.NODE_ENV || 'development',
@@ -10,18 +11,18 @@ module.exports = {
     output: {
         publicPath: process.env.PUBLIC_PATH || '',
         filename: 'js/[name].min.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: buildPath,
     },
     devServer: {
         port: 3000,
         hot: true,
         open: true,
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: buildPath,
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Animation - SaSaSak',
-            filename: path.resolve(__dirname, 'dist/index.html'),
+            filename: path.join(buildPath, 'index.html'),
             template: 'src/index.html',
         }),
     ],

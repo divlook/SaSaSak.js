@@ -5,9 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "serve dist",
-    "build": "cross-env NODE_ENV=production PUBLIC_PATH=SaSaSak.js webpack",
+    "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "cross-env NODE_ENV=production PUBLIC_PATH=SaSaSak.js BUILD_PATH=build npm run build",
+    "deploy": "gh-pages -d build"
   },
   "author": "uihyeon.cha",
   "license": "ISC",
