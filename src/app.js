@@ -1,3 +1,5 @@
+import 'github-markdown-css/github-markdown.css'
+
 if (typeof window.SaSaSakJs !== 'undefined') {
     const sasasak = new SaSaSakJs(document.querySelector('.sasasak'), {
         wrapStyle: {
