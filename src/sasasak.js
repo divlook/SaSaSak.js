@@ -6,7 +6,7 @@ class SaSaSakJs {
         this.isMounted = false
         this.isPlaying = false
         this.isComplete = false
-        this.el = el
+        this.el = null
         this.wrapEl = null
         this.canvas = null
         this.ctx = null
@@ -23,20 +23,30 @@ class SaSaSakJs {
             alphaKeys: [],
         }
 
+        if (el && typeof el === 'object') {
+            this.el = el
+        } else if (el && typeof el === 'string') {
+            this.el = document.querySelector(el)
+        } else {
+            console.error('파라미터를 확인해주세요.')
+            return
+        }
+
         if (hasOption) {
             if (option.wrapStyle && typeof option.wrapStyle === 'object') this.option.wrapStyle = option.wrapStyle
+            if (option.mounted && typeof option.mounted === 'function') this.option.mounted = option.mounted.bind(this)
+            if (option.completed && typeof option.completed === 'function') this.option.completed = option.completed.bind(this)
         }
 
         this.init()
     }
 
     async init() {
-        if (this.el) {
-            this.createWrapper()
-            await this.createCanvas()
-        }
+        this.createWrapper()
+        await this.createCanvas()
         this.wrapEl.classList.add('sasasak-mounted')
         this.isMounted = true
+        if (typeof this.option.mounted === 'function') this.option.mounted()
     }
     createWrapper() {
         if (this.isMounted) return
@@ -163,6 +173,7 @@ class SaSaSakJs {
         this.isComplete = true
         this.imageData.total = 0
         this.imageData.alphaKeys = []
+        if (typeof this.option.completed === 'function') this.option.completed()
     }
 }
 

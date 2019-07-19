@@ -33,21 +33,31 @@ $ npm run start
 ## USE
 
 ```js
-new SaSaSakJs(document.querySelector('el')[, options])
+new SaSaSakJs(Element [, Options])
 ```
+| 이름 | 타입 | 설명 |
+| - | - | - |
+| Element | HTMLElement or String | Element는 필수 인자값이며, <br>`document.querySelector('.sasasak')` 또는 `".sasasak"` 이런식으로 입력하시면 됩니다.|
+| Options | Object | [Options](#options) |
 
 ## 예제
 
-```js
-var sasasak = new SaSaSakJs(document.querySelector('el'), {
-    wrapStyle: {
-        display: 'inline-flex',
-        border: '4px solid #eee',
-        backgroundColor: '#eee',
-    },
-})
+```html
+<script type="text/javascript" src="dist/js/sasasak.min.js"></script>
 
-sasasak.play()
+<script>
+    var sasasak = new SaSaSakJs(document.querySelector('.sasasak'), {
+        wrapStyle: {
+            display: 'inline-flex',
+            border: '4px solid #eee',
+            backgroundColor: '#eee',
+        },
+    })
+
+    document.querySelector('#btn').addEventListener('click', () => {
+        sasasak.play()
+    })
+</script>
 ```
 
 ## Options
@@ -55,13 +65,46 @@ sasasak.play()
 | 이름 | 타입 | 설명 |
 | - | - | - |
 | wrapStyle | Object | [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) |
+| mounted | Function | `canvas`가 그려진 후 실행되는 이벤트입니다. [Mounted](#mounted) |
+| completed | Function | play 애니메이션이 끝난 후 실행되는 이벤트입니다. [Completed](#completed) |
+
+## Event
+
+모든 이벤트는 정해진 상황에 발생하며 `this`를 통해 SaSaSakJs 인스턴스에 접근할 수 있습니다.
+
+### Mounted
+
+`mounted`는 `canvas`가 완전히 그려진 후 실행됩니다.
+
+`mounted` 안에서 `this.play`를 실행하면 `canvas`가 그려진 후 바로 애니메이션이 재생됩니다.
+
+```js
+new SaSaSakJs(document.querySelector('.sasasak'), {
+    mounted: function() {
+        // this.play는 예제입니다. 원하는 내용으로 변경해주세요.
+        this.play()
+    },
+})
+```
+
+### Completed
+
+`play`가 끝난 후 실행됩니다.
+
+```js
+new SaSaSakJs(document.querySelector('.sasasak'), {
+    completed: function() {
+        // 원하는 내용을 입력해주세요.
+        alert('애니메이션이 끝났습니다.')
+    },
+})
+```
 
 ## Methods
 
 | 이름 | 설명 |
 | - | - |
 | play | 애니메니션을 시작합니다 |
-
 
 ## Browser compatibility
 
