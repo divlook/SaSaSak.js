@@ -28,7 +28,7 @@
                 position: relative;
                 z-index: 1;
             }
-            #btn {
+            button {
                 padding: 10px;
                 border-radius: 4px;
                 background-color: #f5da55;
@@ -38,7 +38,6 @@
                 font-size: 12px;
                 color: #333;
                 border: 1px solid #999;
-                margin-bottom: 20px;
             }
         </style>
     </head>
@@ -47,7 +46,8 @@
             <div class="sasasak">
                 <img src="sehoon.jpg" width="300px">
             </div>
-            <button id="btn">SaSaSak!</button>
+            <button type="button" id="btn">SaSaSak!</button>
+            <button type="button" onclick="javascript:window.location.reload()">다시하기</button>
         </div>
     <script type="text/javascript" src="js/sasasak.min.js"></script><script type="text/javascript" src="js/app.min.js"></script></body>
 </html>
