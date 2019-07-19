@@ -1,7 +1,13 @@
-const SaSaSakJs = require('./sasasak')
+if (typeof window.SaSaSakJs !== 'undefined') {
+    const sasasak = new SaSaSakJs(document.querySelector('.sasasak'), {
+        wrapStyle: {
+            display: 'inline-flex',
+            border: '4px solid #eee',
+            backgroundColor: '#eee',
+        }
+    })
 
-const sasasak = new SaSaSakJs(document.querySelector('.sasasak'))
-
-document.querySelector('#btn').addEventListener('click', () => {
-    sasasak.play()
-})
+    document.querySelector('#btn').addEventListener('click', () => {
+        sasasak.play()
+    })
+}

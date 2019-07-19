@@ -43,12 +43,12 @@ class SaSaSakJs {
         this.wrapEl = document.createElement('div')
         this.wrapEl.classList.add('sasasak')
         let wrapStyle = {
-            ...this.wrapEl.style,
             ...this.defaultWrapStyle,
             ...this.option.wrapStyle,
         }
         for (let key in wrapStyle) {
-            this.wrapEl.style[key] = wrapStyle[key]
+            if (key in this.wrapEl.style) this.wrapEl.style[key] = wrapStyle[key]
+            else console.error(key, '지원하지 않는 속성')
         }
 
         this.el.parentNode.insertBefore(this.wrapEl, this.el)
@@ -176,4 +176,5 @@ if (typeof window.SaSaSakJs === 'undefined') {
     console.log(`'SaSaSakJs' has already been declared`)
     console.log(`be use '${className}' instead of 'SaSaSakJs'`)
 }
-module.exports = SaSaSakJs
+
+export default SaSaSakJs
