@@ -104,7 +104,20 @@ new SaSaSakJs(document.querySelector('.sasasak'), {
 
 | 이름 | 설명 |
 | - | - |
-| play | 애니메니션을 시작합니다 |
+| play | 애니메니션을 시작합니다 [Play](#play) |
+
+### Play
+
+애니메니션을 시작합니다
+
+```js
+var sasasak = new SaSaSakJs('.sasasak')
+var btn = document.querySelector('button')
+
+btn.addEventListener('click', function() {
+    sasasak.play()
+})
+```
 
 ## Browser compatibility
 
