@@ -5,6 +5,7 @@ class SaSaSakJs {
         let hasOption = option && typeof option === 'object'
         this.isMounted = false
         this.isPlaying = false
+        this.isComplete = false
         this.el = el
         this.wrapEl = null
         this.canvas = null
@@ -17,6 +18,10 @@ class SaSaSakJs {
         this.lineMaxLength = 0
         this.lineMinLength = 0
         this.lastRotate = 0
+        this.imageData = {
+            total: 0,
+            alphaKeys: [],
+        }
 
         if (hasOption) {
             if (option.wrapStyle && typeof option.wrapStyle === 'object') this.option.wrapStyle = option.wrapStyle
@@ -83,7 +88,7 @@ class SaSaSakJs {
         })
     }
     play(cnt = 1, isClick = true) {
-        if (isClick && (!this.isMounted || this.isPlaying)) {
+        if (isClick && (!this.isMounted || this.isPlaying || this.isComplete)) {
             return
         } else if (isClick && !this.isPlaying) {
             this.isPlaying = true
@@ -124,19 +129,40 @@ class SaSaSakJs {
                 this.play(cnt, false)
             }, ms)
         } else {
-            this.isPlaying = false
+            this.completed()
         }
     }
     checkEmptyCanvas() {
         let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
-        let alphas = imageData.data.filter((row, key) => (key + 1) % 4 === 0)
-        let total = alphas.length
-        let remainingPixels = alphas.filter(row => row > 25).length
+        let remainingPixelCnt = 0
+
+        if (!this.imageData.total) {
+            let alphas = imageData.data.filter((row, key) => {
+                if ((key + 1) % 4 === 0) {
+                    this.imageData.alphaKeys.push(key)
+                    return true
+                }
+                return false
+            })
+            this.imageData.total = alphas.length
+            remainingPixelCnt = alphas.filter(row => row > 25).length
+        } else {
+            remainingPixelCnt = this.imageData.alphaKeys.reduce((cnt, key) => {
+                if (imageData.data[key] > 25) cnt++
+                return cnt
+            }, 0)
+        }
 
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`total: ${total}\nremainingPixels: ${remainingPixels}\nend: ${total * 0.4 > remainingPixels}\n`)
+            console.log(`total: ${this.imageData.total}\nremainingPixelCnt: ${remainingPixelCnt}\nend: ${this.imageData.total * 0.4 > remainingPixelCnt}\n`)
         }
-        return total * 0.4 > remainingPixels
+        return this.imageData.total * 0.4 > remainingPixelCnt
+    }
+    completed() {
+        this.isPlaying = false
+        this.isComplete = true
+        this.imageData.total = 0
+        this.imageData.alphaKeys = []
     }
 }
 
