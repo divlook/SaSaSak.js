@@ -20,6 +20,11 @@ module.exports = {
             { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
         ],
     },
+    performance: {
+        assetFilter: function(assetFilename) {
+            return assetFilename.endsWith('.js')
+        },
+    },
     devServer: {
         port: 3000,
         hot: true,
