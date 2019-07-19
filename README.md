@@ -4,6 +4,10 @@
 
 SaSaSak.js는 [html2canvas](https://html2canvas.hertzen.com/) 라이브러리를 사용하여 Element를 canvas로 만든 뒤 사사삭!하고 지웁니다
 
+## Demo
+
+- https://divlook.github.io/SaSaSak.js
+
 ## Scripts
 
 ```
