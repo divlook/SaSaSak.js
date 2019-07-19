@@ -15,6 +15,11 @@ module.exports = {
         filename: 'js/[name].min.js',
         path: buildPath,
     },
+    module: {
+        rules: [
+            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+        ],
+    },
     devServer: {
         port: 3000,
         hot: true,
