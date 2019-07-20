@@ -1,4 +1,10 @@
 const html2canvas = require('html2canvas')
+const pageOriginOffset = { left: 0, top: 0 }
+
+// Chrome 46+에서 스크롤 위치를 기억 못하게 하기
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual'
+}
 
 class SaSaSakJs {
     constructor(el, option = null) {
@@ -41,11 +47,21 @@ class SaSaSakJs {
     }
 
     async init() {
+        // before
+        pageOriginOffset.left = window.pageXOffset
+        pageOriginOffset.top = window.pageYOffset
+        document.body.style.overflow = 'hidden'
+        window.scroll(0, 0)
+
         this.createWrapper()
         await this.createCanvas()
         this.wrapEl.classList.add('sasasak-mounted')
         this.isMounted = true
         if (typeof this.option.mounted === 'function') this.option.mounted()
+
+        // after
+        document.body.style.overflow = ''
+        window.scroll(pageOriginOffset)
     }
     createWrapper() {
         if (this.isMounted) return

@@ -4,6 +4,20 @@
 
 SaSaSak.js는 [html2canvas](https://html2canvas.hertzen.com/) 라이브러리를 사용하여 Element를 canvas로 만든 뒤 사사삭!하고 지웁니다
 
+## Notice
+
+- scrollbar 문제
+
+    페이지가 길어져서 scrollbar가 생기면 canvas가 그려질 때 scrollbar의 크기만큼 밀리는 현상이 발생합니다.
+
+    이 문제를 해결하기 위해 인스턴스를 생성할 때 document.body의 overflow를 hidden으로 변경하였다가 canvas가 그려지면 overflow를 지워주고 있습니다.
+
+    document.body에 overflow를 변경하고 싶으시면 [Mounted](#mounted) 옵션을 사용해주세요.
+
+- scroll 문제
+
+    동시에 여러개의 인스턴스를 생성시 마지막 스크롤 좌표를 기억 못하는 이슈가 있음.
+
 ## Demo
 
 - https://divlook.github.io/SaSaSak.js
