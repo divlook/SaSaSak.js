@@ -71,25 +71,25 @@ class SaSaSakJs {
             }
             html2canvas(this.el, {
                 backgroundColor: 'transparent',
-                width: this.el.clientWidth,
-                height: this.el.clientHeight,
+                width: this.el.scrollWidth,
+                height: this.el.scrollHeight,
             }).then(canvas => {
                 let img = new Image()
-                img.width = this.wrapEl.clientWidth
-                img.height = this.wrapEl.clientHeight
+                img.width = this.el.scrollWidth
+                img.height = this.el.scrollHeight
                 img.src = canvas.toDataURL()
                 img.onload = () => {
                     this.canvas = document.createElement('canvas')
-                    this.canvas.width = this.wrapEl.clientWidth * window.devicePixelRatio
-                    this.canvas.height = this.wrapEl.clientHeight * window.devicePixelRatio
-                    this.canvas.style.width = this.wrapEl.clientWidth + 'px'
-                    this.canvas.style.height = this.wrapEl.clientHeight + 'px'
+                    this.canvas.width = this.el.scrollWidth * window.devicePixelRatio
+                    this.canvas.height = this.el.scrollHeight * window.devicePixelRatio
+                    this.canvas.style.width = this.el.scrollWidth + 'px'
+                    this.canvas.style.height = this.el.scrollHeight + 'px'
 
                     this.ctx = this.canvas.getContext('2d')
                     this.ctx.drawImage(img, 0, 0)
 
                     this.wrapEl.appendChild(this.canvas)
-                    this.el.hidden = true // this.wrapEl.removeChild(this.el)
+                    this.wrapEl.removeChild(this.el)
 
                     this.lineMaxLength = Math.max(this.canvas.width, this.canvas.height)
                     this.lineMinLength = Math.min(this.canvas.width, this.canvas.height)
