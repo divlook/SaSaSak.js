@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+}
+.markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 45px;
+}
+
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
+    }
+}
+
+button {
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #fff;
+    outline: none;
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+}
+
+.play-zone {
+    .viewport {
+        margin-bottom: 1rem;
+        position: relative;
+        width: 300px;
+        height: 200px;
+        .hidden-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .sasasak {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            z-index: 1;
+            background-size: cover;
+            background-position: center;
+            &.sasasak-mounted {
+                canvas {
+                    position: relative;
+                    z-index: 1;
+                }
+            }
+        }
+    }
+    &.mounted {
+        .viewport .hidden-img {
+            opacity: 1;
+        }
+    }
+}

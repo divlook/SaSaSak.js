@@ -12,7 +12,6 @@ class SaSaSakJs {
         this.ctx = null
         this.option = {}
         this.defaultWrapStyle = {
-            display: 'inline-flex',
             position: 'relative',
         }
         this.lineMaxLength = 0
@@ -71,29 +70,34 @@ class SaSaSakJs {
                 return
             }
             html2canvas(this.el, {
-                width: this.wrapEl.clientWidth,
-                height: this.wrapEl.clientHeight,
+                backgroundColor: 'transparent',
+                width: this.el.clientWidth,
+                height: this.el.clientHeight,
             }).then(canvas => {
                 let img = new Image()
                 img.width = this.wrapEl.clientWidth
                 img.height = this.wrapEl.clientHeight
+                img.src = canvas.toDataURL()
                 img.onload = () => {
                     this.canvas = document.createElement('canvas')
                     this.canvas.width = this.wrapEl.clientWidth * window.devicePixelRatio
                     this.canvas.height = this.wrapEl.clientHeight * window.devicePixelRatio
                     this.canvas.style.width = this.wrapEl.clientWidth + 'px'
                     this.canvas.style.height = this.wrapEl.clientHeight + 'px'
-                    this.lineMaxLength = Math.max(this.canvas.width, this.canvas.height)
-                    this.lineMinLength = Math.min(this.canvas.width, this.canvas.height)
+
                     this.ctx = this.canvas.getContext('2d')
                     this.ctx.drawImage(img, 0, 0)
+
+                    this.wrapEl.appendChild(this.canvas)
+                    this.el.hidden = true // this.wrapEl.removeChild(this.el)
+
+                    this.lineMaxLength = Math.max(this.canvas.width, this.canvas.height)
+                    this.lineMinLength = Math.min(this.canvas.width, this.canvas.height)
                     this.ctx.lineCap = 'round'
                     this.ctx.globalCompositeOperation = 'destination-out'
-                    this.wrapEl.removeChild(this.el)
-                    this.wrapEl.appendChild(this.canvas)
+
                     resolve()
                 }
-                img.src = canvas.toDataURL()
             })
         })
     }

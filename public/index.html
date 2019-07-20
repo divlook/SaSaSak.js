@@ -5,49 +5,29 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title><%= htmlWebpackPlugin.options.title %></title>
-        <style>
-            body {
-                padding: 20px;
-            }
-            .play-zone .sasasak {
-                overflow: hidden;
-            }
-            .play-zone .sasasak.sasasak-mounted::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                z-index: 0;
-                background-image: url('<%= process.env.PUBLIC_PATH %>nayeon.gif');
-                background-size: cover;
-                background-position: center;
-            }
-            .play-zone .sasasak.sasasak-mounted canvas {
-                position: relative;
-                z-index: 1;
-            }
-            button {
-                padding: 10px;
-                border-radius: 4px;
-                background-color: #f5da55;
-                border: 0;
-                outline: none;
-                font-weight: 600;
-                font-size: 12px;
-                color: #333;
-                border: 1px solid #999;
-            }
-        </style>
     </head>
     <body>
-        <div class="play-zone">
-            <div class="sasasak">
-                <img src="<%= process.env.PUBLIC_PATH %>sehoon.jpg" width="300px">
+
+        <div class="markdown-body">
+            <div class="play-zone">
+                <div class="viewport">
+                    <div class="hidden-img" style="background-image: url(<%=process.env.PUBLIC_PATH%>twice_nayeon.jpg)"></div>
+                    <div class="sasasak" style="background-image: url(<%=process.env.PUBLIC_PATH%>twice_all.jpg)"></div>
+                </div>
+                <p>
+                    <button type="button" class="play">Play!</button>
+                </p>
             </div>
-            <button type="button" id="btn">SaSaSak!</button>
-            <button type="button" onclick="javascript:window.location.reload()">다시하기</button>
+
+            <h1>SaSaSak.js</h1>
+            <p><b>Element를 사사삭! 하고 지워보자</b></p>
+            <p>SaSaSak.js는 <a href="https://html2canvas.hertzen.com/">html2canvas</a> 라이브러리를 사용하여 Element를 canvas로 만든 뒤 사사삭!하고 지웁니다</p>
+
+            <h2>Link</h2>
+            <ul>
+                <li><a href="https://github.com/divlook/SaSaSak.js">Guide</a></li>
+                <li><a href="https://divlook.github.io/SaSaSak.js">Demo</a></li>
+            </ul>
         </div>
     </body>
 </html>

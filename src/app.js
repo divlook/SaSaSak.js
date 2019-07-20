@@ -1,15 +1,15 @@
 import 'github-markdown-css/github-markdown.css'
+import './css/app.scss'
 
 if (typeof window.SaSaSakJs !== 'undefined') {
-    const sasasak = new SaSaSakJs(document.querySelector('.sasasak'), {
-        wrapStyle: {
-            display: 'inline-flex',
-            border: '4px solid #eee',
-            backgroundColor: '#eee',
-        }
+    const playZone = document.querySelector('.play-zone')
+    const sasasak = new SaSaSakJs(playZone.querySelector('.sasasak'), {
+        mounted() {
+            playZone.classList.add('mounted')
+        },
     })
 
-    document.querySelector('#btn').addEventListener('click', () => {
+    document.querySelector('.play').addEventListener('click', () => {
         sasasak.play()
     })
 }
