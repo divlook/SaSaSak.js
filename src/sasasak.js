@@ -3,7 +3,6 @@ import html2canvas from 'html2canvas'
 const privateOptions = {
     pageOriginOffset: { left: 0, top: 0 },
     generatingCnt: 0,
-    showLog: process.env.NODE_ENV !== 'production',
 }
 
 class SaSaSakJs {
@@ -48,6 +47,7 @@ class SaSaSakJs {
             completionRate: 0.6,
             maxCountOfOnceScratch: 1000,
             useScrollRestoration: false,
+            showLog: process.env.NODE_ENV !== 'production',
             mounted: () => null,
             completed: () => null,
        }
@@ -58,7 +58,6 @@ class SaSaSakJs {
     set option(option) {
         if (!option || typeof option !== 'object') option = {}
 
-        // wrapStyle
         let wrapStyle = option.wrapStyle && typeof option.wrapStyle === 'object' ? option.wrapStyle : {}
         this._option.wrapStyle = {
             ...this.defaultOptions.wrapStyle,
@@ -83,6 +82,8 @@ class SaSaSakJs {
         if ('scrollRestoration' in history) {
             history.scrollRestoration = this._option.useScrollRestoration === true ? 'auto' : 'manual'
         }
+
+        this._option.showLog = typeof option.showLog === 'boolean' ? option.showLog : this.defaultOptions.showLog
 
         this._option.mounted = option.mounted && typeof option.mounted === 'function'
             ? option.mounted.bind(this)
@@ -244,7 +245,7 @@ class SaSaSakJs {
             this.ctx.stroke()
             this.ctx.closePath()
         }
-        logData(cnt)
+        logData({ drawnStrokeCount: cnt })
 
         cnt += Math.floor(cnt * 1.5)
 
@@ -259,7 +260,7 @@ class SaSaSakJs {
     }
 
     _resetLogData() {
-        if (!privateOptions.showLog) return
+        if (!this.option.showLog) return
         Object.keys(this.logData).forEach(key => {
             this.logData[key] = []
         })
@@ -268,7 +269,7 @@ class SaSaSakJs {
         let ms = Date.now()
         if (!(label in this.logData)) this.logData[label] = []
         return (value) => {
-            if (privateOptions.showLog) {
+            if (this.option.showLog) {
                 let msg = `${Date.now() - ms}ms`
                 if (!value) {
                     value = { time: msg }
@@ -289,7 +290,7 @@ class SaSaSakJs {
         }
     }
     _printLogData() {
-        if (!privateOptions.showLog) return
+        if (!this.option.showLog) return
         for (let key in this.logData) {
             console.log(key, this.logData[key].reduce((sum, row) => sum + parseFloat(row.time), 0) + 'ms')
             console.table(this.logData[key])
