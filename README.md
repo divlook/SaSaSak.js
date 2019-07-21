@@ -58,13 +58,13 @@ new SaSaSakJs(Element [, Options])
 <script>
     var sasasak = new SaSaSakJs(document.querySelector('.sasasak'), {
         wrapStyle: {
-            display: 'inline-flex',
+            display: 'inline-block',
             border: '4px solid #eee',
             backgroundColor: '#eee',
         },
     })
 
-    document.querySelector('#btn').addEventListener('click', () => {
+    document.querySelector('#btn').addEventListener('click', function() {
         sasasak.play()
     })
 </script>
@@ -160,16 +160,16 @@ btn.addEventListener('click', function() {
 
     switch (errorCode) {
         case 'is_not_mounted':
-            alery('아직 준비되지 않았습니다.')
+            alert('아직 준비되지 않았습니다.')
             break
         case 'is_playing':
-            alery('실행중입니다.')
+            alert('실행중입니다.')
             break
         case 'is_complete':
-            alery('실행이 완료되었습니다.')
+            alert('실행이 완료되었습니다.')
             break
         default:
-            alery('실행이 시작되었습니다.')
+            alert('실행이 시작되었습니다.')
             break
     }
 })
