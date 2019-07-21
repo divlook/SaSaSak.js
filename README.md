@@ -125,20 +125,41 @@ new SaSaSakJs(document.querySelector('.sasasak'), {
 
 ## Methods
 
-| 이름 | 설명 |
-| - | - |
-| play | 애니메이션을 시작합니다 [Play](#play) |
-
-### Play
+### sasasak.play()
 
 애니메이션을 시작합니다
+
+- Return value
+
+    play에 실패하면 ErrorCode를 반환합니다.
+
+    |ErrorCode| |
+    |-|-|
+    | is_not_mounted | mounted가 되지 않음 |
+    | is_playing | 이미 실행중 |
+    | is_complete | 실행이 완료됨 |
 
 ```js
 var sasasak = new SaSaSakJs('.sasasak')
 var btn = document.querySelector('button')
 
 btn.addEventListener('click', function() {
-    sasasak.play()
+    var errorCode = sasasak.play()
+
+    switch (errorCode) {
+        case 'is_not_mounted':
+            alery('아직 준비되지 않았습니다.')
+            break
+        case 'is_playing':
+            alery('실행중입니다.')
+            break
+        case 'is_complete':
+            alery('실행이 완료되었습니다.')
+            break
+        default:
+            alery('실행이 시작되었습니다.')
+            break
+    }
 })
 ```
 
