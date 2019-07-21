@@ -45,6 +45,8 @@ class SaSaSakJs {
             },
             strokeMinWidth: 2,
             strokeMaxWidth: 4,
+            completionRate: 0.6,
+            maxCountOfOnceScratch: 1000,
             useScrollRestoration: false,
             mounted: () => null,
             completed: () => null,
@@ -65,6 +67,14 @@ class SaSaSakJs {
 
         this._option.strokeMinWidth = option.strokeMinWidth > 0 ? option.strokeMinWidth : this.defaultOptions.strokeMinWidth
         this._option.strokeMaxWidth = option.strokeMaxWidth > 0 ? option.strokeMaxWidth : this.defaultOptions.strokeMaxWidth
+
+        this._option.maxCountOfOnceScratch = option.maxCountOfOnceScratch > 0
+            ? option.maxCountOfOnceScratch < 10 ? 10 : option.maxCountOfOnceScratch
+            : this.defaultOptions.maxCountOfOnceScratch
+
+        this._option.completionRate = option.completionRate > 0
+            ? option.completionRate > 1 ? 1 : option.completionRate
+            : this.defaultOptions.completionRate
 
         // Chrome 46+에서 스크롤 위치를 기억 못하게 하기
         this._option.useScrollRestoration = typeof option.useScrollRestoration === 'undefined'
@@ -190,10 +200,10 @@ class SaSaSakJs {
             total: this.imageData.total,
             remains: remainingPixelCnt,
             percent: Math.floor((remainingPixelCnt / this.imageData.total) * 100),
-            end: this.imageData.total * 0.4 > remainingPixelCnt,
+            end: this.imageData.total * (1 - this.option.completionRate) > remainingPixelCnt,
         })
 
-        return this.imageData.total * 0.4 > remainingPixelCnt
+        return this.imageData.total * (1 - this.option.completionRate) > remainingPixelCnt
     }
 
     _completed() {
@@ -206,8 +216,8 @@ class SaSaSakJs {
     }
 
     _scratch(cnt = 0) {
-        cnt += 100
-        if (cnt > 1000) cnt = 1000
+        cnt += Math.floor(this.option.maxCountOfOnceScratch / 10)
+        if (cnt > this.option.maxCountOfOnceScratch) cnt = this.option.maxCountOfOnceScratch
 
         let logData = this._setLogData('_scratch')
         for (let index = 0; index < cnt; index++) {

@@ -81,6 +81,8 @@ new SaSaSakJs(Element [, Options])
 | wrapStyle | Object | [Default wrapStyle](#default-wrapStyle) | [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) |
 | strokeMinWidth | Number | 2 | 선의 최소 두께 (단위: px) |
 | strokeMaxWidth | Number | 4 | 선의 최대 두께 (단위: px) |
+| maxCountOfOnceScratch | Number | 1000 | 한 번 스크래치의 최대 횟수 (최소 `10`)<br>횟수가 `100`보다 적거나 `1000`이 넘어가면 성능상 좋지 않습니다. |
+| completionRate | Number | 0.6 | play 애니메이션을 종료할 완성도. (범위: 0 < completionRate <= 1) |
 | completed | Function | | play 애니메이션이 끝난 후 실행되는 이벤트입니다. [Completed](#completed) |
 | useScrollRestoration | Boolean | false | Chrome 46+에서 스크롤 위치를 기억했다가 자동으로 복원하는 기능의 사용여부입니다.<br>이 기능을 사용하시면 `canvas`가 제대로 그려지지 않을 수 있습니다. |
 
