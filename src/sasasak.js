@@ -1,6 +1,9 @@
 import html2canvas from 'html2canvas'
 
-const pageOriginOffset = { left: 0, top: 0 }
+const privateOptions = {
+    pageOriginOffset: { left: 0, top: 0 },
+    generatingCnt: 0,
+}
 
 class SaSaSakJs {
     constructor(el, option = null) {
@@ -73,21 +76,29 @@ class SaSaSakJs {
     }
 
     async init() {
-        // before
-        pageOriginOffset.left = window.pageXOffset
-        pageOriginOffset.top = window.pageYOffset
-        document.body.style.overflow = 'hidden'
-        window.scroll(0, 0)
+        // beforeCreate
+        privateOptions.generatingCnt++
+        if (privateOptions.generatingCnt === 1) {
+            privateOptions.pageOriginOffset.left = window.pageXOffset
+            privateOptions.pageOriginOffset.top = window.pageYOffset
+            document.body.style.overflow = 'hidden'
+            window.scroll(0, 0)
+        }
 
         this.createWrapper()
         await this.createCanvas()
+
+        // created
+        privateOptions.generatingCnt--
+        if (privateOptions.generatingCnt === 0) {
+            document.body.style.overflow = ''
+            window.scroll(privateOptions.pageOriginOffset)
+        }
+
+        // mounted
         this.wrapEl.classList.add('sasasak-mounted')
         this.isMounted = true
         this.option.mounted()
-
-        // after
-        document.body.style.overflow = ''
-        window.scroll(pageOriginOffset)
     }
     createWrapper() {
         if (this.isMounted) return
