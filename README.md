@@ -14,10 +14,6 @@ SaSaSak.js는 [html2canvas](https://html2canvas.hertzen.com/) 라이브러리를
 
     document.body에 overflow를 변경하고 싶으시면 [Mounted](#mounted) 옵션을 사용해주세요.
 
-- scroll 문제
-
-    동시에 여러개의 인스턴스를 생성시 마지막 스크롤 좌표를 기억 못하는 이슈가 있음.
-
 ## Demo
 
 - https://divlook.github.io/SaSaSak.js
@@ -126,6 +122,16 @@ new SaSaSakJs(document.querySelector('.sasasak'), {
     },
 })
 ```
+
+## Property
+
+| 이름 | 타입 | |
+| - | - | - |
+| isMounted | Boolean | 실행이 준비되었는지에 대한 여부 |
+| isPlaying | Boolean | 실행이 진행중인지에 대한 여부 |
+| isComplete | Boolean | 실행이 완료되었는지에 대한 여부 |
+| wrapEl | Element | canvas를 감싸고 있는 Element.<br>`sasasak` className을 가지고 있으며 mounted시 `sasasak-mounted` className이 추가 됩니다. |
+| canvas | Element | |
 
 ## Methods
 

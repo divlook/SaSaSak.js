@@ -18,6 +18,8 @@ class SaSaSakJs {
         this.option = option
         this.strokeMaxLength = 0
         this.strokeMinLength = 0
+        this.strokeMinWidth = 0
+        this.strokeMaxWidth = 0
         this.lastRotate = 0
         this.imageData = {
             total: 0,
@@ -162,8 +164,8 @@ class SaSaSakJs {
 
                     this.strokeMaxLength = Math.max(this.canvas.width, this.canvas.height)
                     this.strokeMinLength = Math.min(this.canvas.width, this.canvas.height)
-                    this.strokeMinWidth = Math.min(this.option.strokeMinWidth, this.option.strokeMaxWidth)
                     this.strokeMaxWidth = Math.max(this.option.strokeMinWidth, this.option.strokeMaxWidth)
+                    this.strokeMinWidth = Math.min(this.option.strokeMinWidth, this.option.strokeMaxWidth)
                     this.ctx.lineCap = 'round'
                     this.ctx.globalCompositeOperation = 'destination-out'
 
