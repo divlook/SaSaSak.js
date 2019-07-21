@@ -985,11 +985,13 @@ button {
 
 .play-zone .viewport {
   margin-bottom: 1rem;
-  position: relative;
-  width: 300px;
-  height: 200px;
 }
-.play-zone .viewport .hidden-img {
+.play-zone.twice .viewport {
+  position: relative;
+  padding-bottom: 66.66%;
+  height: 0px;
+}
+.play-zone.twice .viewport .hidden-img {
   position: absolute;
   top: 0;
   left: 0;
@@ -1001,17 +1003,127 @@ button {
   opacity: 0;
   transition: opacity 0.3s;
 }
-.play-zone .viewport .sasasak {
+.play-zone.twice .viewport .sasasak {
   position: relative;
-  width: 300px;
-  height: 200px;
+  padding-bottom: 66.66%;
+  height: 0px;
   z-index: 1;
   background-size: cover;
   background-position: center;
 }
-.play-zone .viewport .sasasak.sasasak-mounted canvas {
+.play-zone.twice .viewport .sasasak.sasasak-mounted canvas {
   position: relative;
   z-index: 1;
+}
+.play-zone.ticket .viewport {
+  overflow: hidden;
+}
+.play-zone.ticket .viewport .ticket-paper {
+  background-color: #e22081;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.play-zone.ticket .viewport .ticket-paper::before, .play-zone.ticket .viewport .ticket-paper::after {
+  content: "";
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-title {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 30px;
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-scratch {
+  position: relative;
+  width: 260px;
+  height: 100px;
+  z-index: 1;
+  margin: 0 auto;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-scratch .ticket-scratch-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  background-color: #ababab;
+  color: #ddd;
+  font-size: 30px;
+  font-weight: 800;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-scratch .ticket-scratch-item.result {
+  border: 1px solid #9b9b9b;
+  background-color: #505065;
+  color: #e8d9e1;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line {
+  position: absolute;
+  left: -80px;
+  top: -55px;
+  z-index: 0;
+  width: 10px;
+  height: 318px;
+  background-color: #ed6a6c;
+  transform: rotate(45deg);
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(1) {
+  left: -80px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(2) {
+  left: -50px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(3) {
+  left: -20px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(4) {
+  left: 10px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(5) {
+  left: 40px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(6) {
+  left: 70px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(7) {
+  left: 100px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(8) {
+  left: 130px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(9) {
+  left: 160px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(10) {
+  left: 190px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(11) {
+  left: 220px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(12) {
+  left: 250px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(13) {
+  left: 280px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(14) {
+  left: 310px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(15) {
+  left: 340px;
+}
+.play-zone.ticket .viewport .ticket-paper .ticket-line:nth-child(16) {
+  left: 370px;
 }
 .play-zone.mounted .viewport .hidden-img {
   opacity: 1;
