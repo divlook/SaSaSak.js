@@ -28,32 +28,107 @@ button {
 .play-zone {
     .viewport {
         margin-bottom: 1rem;
-        position: relative;
-        width: 300px;
-        height: 200px;
-        .hidden-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 0;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .sasasak {
+    }
+    &.twice {
+        .viewport {
             position: relative;
-            width: 300px;
-            height: 200px;
-            z-index: 1;
-            background-size: cover;
-            background-position: center;
-            &.sasasak-mounted {
-                canvas {
+            padding-bottom: 66.66%;
+            height: 0px;
+            .hidden-img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 0;
+                background-size: cover;
+                background-position: center;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            .sasasak {
+                position: relative;
+                padding-bottom: 66.66%;
+                height: 0px;
+                z-index: 1;
+                background-size: cover;
+                background-position: center;
+                &.sasasak-mounted {
+                    canvas {
+                        position: relative;
+                        z-index: 1;
+                    }
+                }
+            }
+        }
+    }
+    &.ticket {
+        .viewport {
+            overflow: hidden;
+            .ticket-paper {
+                background-color: #e22081;
+                width: 300px;
+                height: 200px;
+                display: flex;
+                // justify-content: center;
+                justify-content: space-around;
+                flex-direction: column;
+                position: relative;
+                overflow: hidden;
+                &::before,
+                &::after {
+                    content: '';
+                }
+                .ticket-title {
+                    color: rgba($color: #fff, $alpha: 0.8);
+                    font-size: 30px;
+                    font-weight: 800;
                     position: relative;
                     z-index: 1;
+                    display: flex;
+                    justify-content: center;
+                }
+                .ticket-scratch {
+                    position: relative;
+                    width: 260px;
+                    height: 100px;
+                    z-index: 1;
+                    margin: 0 auto;
+                    .ticket-scratch-item {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        display: flex;
+                        background-color: #ababab;
+                        color: #ddd;
+                        font-size: 30px;
+                        font-weight: 800;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 10px;
+                        &.result {
+                            border: 1px solid #9b9b9b;
+                            background-color: #505065;
+                            color: #e8d9e1;
+                        }
+                    }
+                }
+                .ticket-line {
+                    position: absolute;
+                    left: -80px;
+                    top: -55px;
+                    z-index: 0;
+                    width: 10px;
+                    height: 318px;
+                    background-color: #ed6a6c;
+                    transform: rotate(45deg);
+                    @for $n from 0 through 15 {
+                        &:nth-child(#{$n + 1}) {
+                            left: -80px + $n * 30 ;
+                        }
+                    }
                 }
             }
         }
