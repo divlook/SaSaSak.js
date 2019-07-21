@@ -103,8 +103,8 @@ class SaSaSakJs {
             window.scroll(0, 0)
         }
 
-        this._createWrapper()
         await this._createCanvas()
+        this._createWrapper()
 
         // created
         privateOptions.generatingCnt--
@@ -130,7 +130,8 @@ class SaSaSakJs {
         }
 
         this.el.parentNode.insertBefore(this.wrapEl, this.el)
-        this.wrapEl.appendChild(this.el)
+        this.el.parentNode.removeChild(this.el)
+        this.wrapEl.appendChild(this.canvas)
     }
 
     _createCanvas() {
@@ -158,9 +159,6 @@ class SaSaSakJs {
                     this.ctx = this.canvas.getContext('2d')
                     this.ctx.imageSmoothingQuality = 'high'
                     this.ctx.drawImage(img, 0, 0)
-
-                    this.wrapEl.appendChild(this.canvas)
-                    this.wrapEl.removeChild(this.el)
 
                     this.strokeMaxLength = Math.max(this.canvas.width, this.canvas.height)
                     this.strokeMinLength = Math.min(this.canvas.width, this.canvas.height)
