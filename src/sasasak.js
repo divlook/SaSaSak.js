@@ -20,6 +20,8 @@ class SaSaSakJs {
         this.strokeMinLength = 0
         this.strokeMinWidth = 0
         this.strokeMaxWidth = 0
+        this.strokeMaxRotate = 0
+        this.strokeMinRotate = 0
         this.lastRotate = 0
         this.imageData = {
             total: 0,
@@ -46,6 +48,8 @@ class SaSaSakJs {
             },
             strokeMinWidth: 2,
             strokeMaxWidth: 4,
+            strokeMinRotate: 15,
+            strokeMaxRotate: 30,
             completionRate: 0.6,
             maxCountOfOnceScratch: 1000,
             useScrollRestoration: false,
@@ -68,6 +72,9 @@ class SaSaSakJs {
 
         this._option.strokeMinWidth = option.strokeMinWidth > 0 ? option.strokeMinWidth : this.defaultOptions.strokeMinWidth
         this._option.strokeMaxWidth = option.strokeMaxWidth > 0 ? option.strokeMaxWidth : this.defaultOptions.strokeMaxWidth
+
+        this._option.strokeMinRotate = !isNaN(option.strokeMinRotate) ? option.strokeMinRotate : this.defaultOptions.strokeMinRotate
+        this._option.strokeMaxRotate = !isNaN(option.strokeMaxRotate) ? option.strokeMaxRotate : this.defaultOptions.strokeMaxRotate
 
         this._option.maxCountOfOnceScratch = option.maxCountOfOnceScratch > 0
             ? option.maxCountOfOnceScratch < 10 ? 10 : option.maxCountOfOnceScratch
@@ -166,6 +173,8 @@ class SaSaSakJs {
                     this.strokeMinLength = Math.min(this.canvas.width, this.canvas.height)
                     this.strokeMaxWidth = Math.max(this.option.strokeMinWidth, this.option.strokeMaxWidth)
                     this.strokeMinWidth = Math.min(this.option.strokeMinWidth, this.option.strokeMaxWidth)
+                    this.strokeMaxRotate = Math.max(this.option.strokeMinRotate, this.option.strokeMaxRotate)
+                    this.strokeMinRotate = Math.min(this.option.strokeMinRotate, this.option.strokeMaxRotate)
                     this.ctx.lineCap = 'round'
                     this.ctx.globalCompositeOperation = 'destination-out'
 
@@ -231,7 +240,8 @@ class SaSaSakJs {
             let strokeLength = this.strokeMaxLength + this.strokeMaxLength * (_percent/100) * _plusMinus
             let x = Math.floor(random * _zero * 10) % this.strokeMaxLength * (_percent/100) * -3
             let y = Math.floor(random * _zero * 10) % this.strokeMaxLength + 1 + Math.floor(this.strokeMaxLength / 100) * (_percent/100)
-            let strokeRotate = (365 - (Math.floor(random * 100) % 15 + 15)) * Math.PI / 180
+
+            let strokeRotate = (365 - (Math.floor(random * 1000) % (this.strokeMaxRotate - this.strokeMinRotate) + this.strokeMinRotate)) * Math.PI / 180
             let strokeAlpha = Math.floor(random * 10) / 10
 
             this.ctx.globalAlpha = strokeAlpha

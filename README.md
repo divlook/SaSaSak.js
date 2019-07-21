@@ -77,6 +77,8 @@ new SaSaSakJs(Element [, Options])
 | wrapStyle | Object | [Default wrapStyle](#default-wrapStyle) | [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) |
 | strokeMinWidth | Number | 2 | 선의 최소 두께 (단위: px) |
 | strokeMaxWidth | Number | 4 | 선의 최대 두께 (단위: px) |
+| strokeMinRotate | Number | 15 | 선의 최소 회전각도 |
+| strokeMaxRotate | Number | 30 | 선의 최대 회전각도 |
 | maxCountOfOnceScratch | Number | 1000 | 한 번 스크래치할 때 그리는 선의 최대 개수 (최소 `10`)<br>개수가 `100`보다 적거나 `1000`이 넘어가면 성능상 좋지 않습니다. |
 | completionRate | Number | 0.6 | play 애니메이션을 종료할 완성도. (범위: 0 < completionRate <= 1) |
 | completed | Function | | play 애니메이션이 끝난 후 실행되는 이벤트입니다. [Completed](#completed) |
