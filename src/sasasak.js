@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas'
 const privateOptions = {
     pageOriginOffset: { left: 0, top: 0 },
     generatingCnt: 0,
+    showLog: process.env.NODE_ENV !== 'production',
 }
 
 class SaSaSakJs {
@@ -23,6 +24,7 @@ class SaSaSakJs {
             total: 0,
             alphaKeys: [],
         }
+        this.logData = {}
 
         if (el && typeof el === 'object') {
             this.el = el
@@ -138,6 +140,7 @@ class SaSaSakJs {
                     this.canvas.style.height = this.el.scrollHeight + 'px'
 
                     this.ctx = this.canvas.getContext('2d')
+                    this.ctx.imageSmoothingQuality = 'high'
                     this.ctx.drawImage(img, 0, 0)
 
                     this.wrapEl.appendChild(this.canvas)
@@ -155,6 +158,7 @@ class SaSaSakJs {
     }
 
     _checkEmptyCanvas() {
+        let logData = this._setLogData('_checkEmptyCanvas')
         let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
         let remainingPixelCnt = 0
 
@@ -174,10 +178,14 @@ class SaSaSakJs {
                 return cnt
             }, 0)
         }
+        logData()
+        this._setLogData('_checkEmptyCanvas_result')({
+            total: this.imageData.total,
+            remains: remainingPixelCnt,
+            percent: Math.floor((remainingPixelCnt / this.imageData.total) * 100),
+            end: this.imageData.total * 0.4 > remainingPixelCnt,
+        })
 
-        if (process.env.NODE_ENV !== 'production') {
-            console.log(`total: ${this.imageData.total}\nremainingPixelCnt: ${remainingPixelCnt}\nend: ${this.imageData.total * 0.4 > remainingPixelCnt}\n`)
-        }
         return this.imageData.total * 0.4 > remainingPixelCnt
     }
 
@@ -187,25 +195,28 @@ class SaSaSakJs {
         this.imageData.total = 0
         this.imageData.alphaKeys = []
         this.option.completed()
+        this._printLogData()
     }
 
-    _scratch(cnt = 1) {
+    _scratch(cnt = 0) {
         cnt += 100
-        if (cnt > 5000) cnt = 5000
+        if (cnt > 1000) cnt = 1000
 
+        let logData = this._setLogData('_scratch')
         for (let index = 0; index < cnt; index++) {
             let random = Math.random()
             let _percent = Math.floor(random * 100) % 20 + 1
             let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
-            let _zero = Math.pow(10, (this.lineMinLength.toString().length))
+            let _zero = Math.pow(10, (this.lineMaxLength.toString().length - 1))
 
-            let lineWidth = this.lineMinLength * 0.3 * Math.floor(random * 10) % 3
-            let lineLength = this.lineMinLength + this.lineMinLength * (_percent/100) * _plusMinus
-            let x = Math.floor(random * _zero) % this.lineMinLength * (_percent/100) * -2
-            let y = Math.floor(random * _zero) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * (_percent/100)
-            let lineRotate = (365 - (Math.floor(random * 100) % 20 + 20)) * Math.PI / 180
+            let lineWidth = this.lineMaxLength / _zero * (Math.floor(random * 10) % 4 + 1)
+            let lineLength = this.lineMaxLength + this.lineMaxLength * (_percent/100) * _plusMinus
+            let x = Math.floor(random * _zero * 10) % this.lineMaxLength * (_percent/100) * -3
+            let y = Math.floor(random * _zero * 10) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * (_percent/100)
+            let lineRotate = (365 - (Math.floor(random * 100) % 20 + 10)) * Math.PI / 180
+            let lineAlpha = Math.floor(random * 10) / 10
 
-            this.ctx.globalAlpha = Math.floor(random * 10) / 10;
+            this.ctx.globalAlpha = lineAlpha
             this.ctx.lineWidth = lineWidth
             this.ctx.beginPath()
             this.ctx.moveTo(x, y)
@@ -216,11 +227,12 @@ class SaSaSakJs {
             this.ctx.stroke()
             this.ctx.closePath()
         }
+        logData(cnt)
 
         cnt += Math.floor(cnt * 1.5)
 
         if (!this._checkEmptyCanvas()) {
-            let ms = 1000 - cnt < 0 ? 150 : 1000 - Math.floor(cnt)
+            let ms = 1000 - cnt < 0 ? 0 : 1000 - Math.floor(cnt)
             setTimeout(() => {
                 this._scratch(cnt)
             }, ms)
@@ -229,11 +241,50 @@ class SaSaSakJs {
         }
     }
 
+    _resetLogData() {
+        if (!privateOptions.showLog) return
+        Object.keys(this.logData).forEach(key => {
+            this.logData[key] = []
+        })
+    }
+    _setLogData(label) {
+        let ms = Date.now()
+        if (!(label in this.logData)) this.logData[label] = []
+        return (value) => {
+            if (privateOptions.showLog) {
+                let msg = `${Date.now() - ms}ms`
+                if (!value) {
+                    value = { time: msg }
+                } else if (typeof value === 'object') {
+                    if (Array.isArray(value)) {
+                        value.push(msg)
+                    } else {
+                        value['time'] = msg
+                    }
+                } else {
+                    value = {
+                        value,
+                        time: msg,
+                    }
+                }
+                this.logData[label].push(value)
+            }
+        }
+    }
+    _printLogData() {
+        if (!privateOptions.showLog) return
+        for (let key in this.logData) {
+            console.log(key, this.logData[key].reduce((sum, row) => sum + parseFloat(row.time), 0) + 'ms')
+            console.table(this.logData[key])
+        }
+    }
+
     play() {
         if (!this.isMounted) return 'is_not_mounted'
         if (this.isPlaying) return 'is_playing'
         if (this.isComplete) return 'is_complete'
         this.isPlaying = true
+        this._resetLogData()
         this._scratch()
     }
 }
