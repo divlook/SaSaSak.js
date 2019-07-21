@@ -17,8 +17,8 @@ class SaSaSakJs {
         this.ctx = null
         this._option = {}
         this.option = option
-        this.lineMaxLength = 0
-        this.lineMinLength = 0
+        this.strokeMaxLength = 0
+        this.strokeMinLength = 0
         this.lastRotate = 0
         this.imageData = {
             total: 0,
@@ -43,6 +43,8 @@ class SaSaSakJs {
             wrapStyle: {
                 position: 'relative',
             },
+            strokeMinWidth: 2,
+            strokeMaxWidth: 4,
             useScrollRestoration: false,
             mounted: () => null,
             completed: () => null,
@@ -60,6 +62,9 @@ class SaSaSakJs {
             ...this.defaultOptions.wrapStyle,
             ...wrapStyle,
         }
+
+        this._option.strokeMinWidth = option.strokeMinWidth > 0 ? option.strokeMinWidth : this.defaultOptions.strokeMinWidth
+        this._option.strokeMaxWidth = option.strokeMaxWidth > 0 ? option.strokeMaxWidth : this.defaultOptions.strokeMaxWidth
 
         // Chrome 46+에서 스크롤 위치를 기억 못하게 하기
         this._option.useScrollRestoration = typeof option.useScrollRestoration === 'undefined'
@@ -146,8 +151,10 @@ class SaSaSakJs {
                     this.wrapEl.appendChild(this.canvas)
                     this.wrapEl.removeChild(this.el)
 
-                    this.lineMaxLength = Math.max(this.canvas.width, this.canvas.height)
-                    this.lineMinLength = Math.min(this.canvas.width, this.canvas.height)
+                    this.strokeMaxLength = Math.max(this.canvas.width, this.canvas.height)
+                    this.strokeMinLength = Math.min(this.canvas.width, this.canvas.height)
+                    this.strokeMinWidth = Math.min(this.option.strokeMinWidth, this.option.strokeMaxWidth)
+                    this.strokeMaxWidth = Math.max(this.option.strokeMinWidth, this.option.strokeMaxWidth)
                     this.ctx.lineCap = 'round'
                     this.ctx.globalCompositeOperation = 'destination-out'
 
@@ -207,22 +214,22 @@ class SaSaSakJs {
             let random = Math.random()
             let _percent = Math.floor(random * 100) % 20 + 1
             let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
-            let _zero = Math.pow(10, (this.lineMaxLength.toString().length - 1))
+            let _zero = Math.pow(10, (this.strokeMaxLength.toString().length - 1))
 
-            let lineWidth = this.lineMaxLength / _zero * (Math.floor(random * 10) % 4 + 1)
-            let lineLength = this.lineMaxLength + this.lineMaxLength * (_percent/100) * _plusMinus
-            let x = Math.floor(random * _zero * 10) % this.lineMaxLength * (_percent/100) * -3
-            let y = Math.floor(random * _zero * 10) % this.lineMaxLength + 1 + Math.floor(this.lineMaxLength / 100) * (_percent/100)
-            let lineRotate = (365 - (Math.floor(random * 100) % 20 + 10)) * Math.PI / 180
-            let lineAlpha = Math.floor(random * 10) / 10
+            let strokeWidth = (this.strokeMaxWidth - this.strokeMinWidth) / 10 * (Math.floor(random * 10) + 1) * window.devicePixelRatio
+            let strokeLength = this.strokeMaxLength + this.strokeMaxLength * (_percent/100) * _plusMinus
+            let x = Math.floor(random * _zero * 10) % this.strokeMaxLength * (_percent/100) * -3
+            let y = Math.floor(random * _zero * 10) % this.strokeMaxLength + 1 + Math.floor(this.strokeMaxLength / 100) * (_percent/100)
+            let strokeRotate = (365 - (Math.floor(random * 100) % 15 + 15)) * Math.PI / 180
+            let strokeAlpha = Math.floor(random * 10) / 10
 
-            this.ctx.globalAlpha = lineAlpha
-            this.ctx.lineWidth = lineWidth
+            this.ctx.globalAlpha = strokeAlpha
+            this.ctx.lineWidth = strokeWidth
             this.ctx.beginPath()
             this.ctx.moveTo(x, y)
-            this.ctx.lineTo(lineLength, y)
+            this.ctx.lineTo(strokeLength, y)
             if (this.lastRotate) this.ctx.rotate(-1 * this.lastRotate)
-            this.lastRotate = lineRotate
+            this.lastRotate = strokeRotate
             this.ctx.rotate(this.lastRotate)
             this.ctx.stroke()
             this.ctx.closePath()
