@@ -33,7 +33,7 @@ class SaSaSakJs {
             return
         }
 
-        this.init()
+        this._init()
     }
 
     get defaultOptions() {
@@ -75,7 +75,7 @@ class SaSaSakJs {
             : this.defaultOptions.completed
     }
 
-    async init() {
+    async _init() {
         // beforeCreate
         privateOptions.generatingCnt++
         if (privateOptions.generatingCnt === 1) {
@@ -85,8 +85,8 @@ class SaSaSakJs {
             window.scroll(0, 0)
         }
 
-        this.createWrapper()
-        await this.createCanvas()
+        this._createWrapper()
+        await this._createCanvas()
 
         // created
         privateOptions.generatingCnt--
@@ -100,7 +100,8 @@ class SaSaSakJs {
         this.isMounted = true
         this.option.mounted()
     }
-    createWrapper() {
+
+    _createWrapper() {
         if (this.isMounted) return
         this.wrapEl = document.createElement('div')
         this.wrapEl.classList.add('sasasak')
@@ -113,7 +114,8 @@ class SaSaSakJs {
         this.el.parentNode.insertBefore(this.wrapEl, this.el)
         this.wrapEl.appendChild(this.el)
     }
-    createCanvas() {
+
+    _createCanvas() {
         return new Promise(resolve => {
             if (this.isMounted) {
                 resolve()
@@ -151,13 +153,43 @@ class SaSaSakJs {
             })
         })
     }
-    play(cnt = 1, isClick = true) {
-        if (isClick && (!this.isMounted || this.isPlaying || this.isComplete)) {
-            return
-        } else if (isClick && !this.isPlaying) {
-            this.isPlaying = true
+
+    _checkEmptyCanvas() {
+        let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
+        let remainingPixelCnt = 0
+
+        if (!this.imageData.total) {
+            let alphas = imageData.data.filter((row, key) => {
+                if ((key + 1) % 4 === 0) {
+                    this.imageData.alphaKeys.push(key)
+                    return true
+                }
+                return false
+            })
+            this.imageData.total = alphas.length
+            remainingPixelCnt = alphas.filter(row => row > 25).length
+        } else {
+            remainingPixelCnt = this.imageData.alphaKeys.reduce((cnt, key) => {
+                if (imageData.data[key] > 25) cnt++
+                return cnt
+            }, 0)
         }
 
+        if (process.env.NODE_ENV !== 'production') {
+            console.log(`total: ${this.imageData.total}\nremainingPixelCnt: ${remainingPixelCnt}\nend: ${this.imageData.total * 0.4 > remainingPixelCnt}\n`)
+        }
+        return this.imageData.total * 0.4 > remainingPixelCnt
+    }
+
+    _completed() {
+        this.isPlaying = false
+        this.isComplete = true
+        this.imageData.total = 0
+        this.imageData.alphaKeys = []
+        this.option.completed()
+    }
+
+    _scratch(cnt = 1) {
         cnt += 100
         if (cnt > 5000) cnt = 5000
 
@@ -187,47 +219,22 @@ class SaSaSakJs {
 
         cnt += Math.floor(cnt * 1.5)
 
-        if (!this.checkEmptyCanvas()) {
+        if (!this._checkEmptyCanvas()) {
             let ms = 1000 - cnt < 0 ? 150 : 1000 - Math.floor(cnt)
             setTimeout(() => {
-                this.play(cnt, false)
+                this._scratch(cnt)
             }, ms)
         } else {
-            this.completed()
+            this._completed()
         }
     }
-    checkEmptyCanvas() {
-        let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
-        let remainingPixelCnt = 0
 
-        if (!this.imageData.total) {
-            let alphas = imageData.data.filter((row, key) => {
-                if ((key + 1) % 4 === 0) {
-                    this.imageData.alphaKeys.push(key)
-                    return true
-                }
-                return false
-            })
-            this.imageData.total = alphas.length
-            remainingPixelCnt = alphas.filter(row => row > 25).length
-        } else {
-            remainingPixelCnt = this.imageData.alphaKeys.reduce((cnt, key) => {
-                if (imageData.data[key] > 25) cnt++
-                return cnt
-            }, 0)
-        }
-
-        if (process.env.NODE_ENV !== 'production') {
-            console.log(`total: ${this.imageData.total}\nremainingPixelCnt: ${remainingPixelCnt}\nend: ${this.imageData.total * 0.4 > remainingPixelCnt}\n`)
-        }
-        return this.imageData.total * 0.4 > remainingPixelCnt
-    }
-    completed() {
-        this.isPlaying = false
-        this.isComplete = true
-        this.imageData.total = 0
-        this.imageData.alphaKeys = []
-        this.option.completed()
+    play() {
+        if (!this.isMounted) return 'is_not_mounted'
+        if (this.isPlaying) return 'is_playing'
+        if (this.isComplete) return 'is_complete'
+        this.isPlaying = true
+        this._scratch()
     }
 }
 
