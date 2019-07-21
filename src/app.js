@@ -6,11 +6,12 @@ if (typeof window.SaSaSakJs !== 'undefined') {
         let options = {}
 
         if (playZone.classList.contains('ticket')) {
-            options.strokeMinWidth = 2
-            options.strokeMaxWidth = 5
-            options.strokeMinRotate = -10
-            options.strokeMaxRotate = 30
-            options.maxCountOfOnceScratch = 500
+            options.strokeMinWidth = 6
+            options.strokeMaxWidth = 10
+            options.strokeMinRotate = 0
+            options.strokeMaxRotate = 20
+            options.maxCountOfOnceScratch = 600
+            options.completionRate = 0.4
         }
 
         new SaSaSakJs(playZone.querySelector('.sasasak'), {
