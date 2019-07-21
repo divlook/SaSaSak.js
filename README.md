@@ -76,11 +76,20 @@ new SaSaSakJs(Element [, Options])
 
 ## Options
 
-| 이름 | 타입 | 설명 |
-| - | - | - |
-| wrapStyle | Object | [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) |
-| mounted | Function | `canvas`가 그려진 후 실행되는 이벤트입니다. [Mounted](#mounted) |
-| completed | Function | play 애니메이션이 끝난 후 실행되는 이벤트입니다. [Completed](#completed) |
+| 이름 | 타입 | 기본값 | 설명 |
+| - | - | - | - |
+| wrapStyle | Object | [Default wrapStyle](#default-wrapStyle) | [HTML DOM Style Object](https://www.w3schools.com/jsref/dom_obj_style.asp) |
+| mounted | Function | | `canvas`가 그려진 후 실행되는 이벤트입니다. [Mounted](#mounted) |
+| completed | Function | | play 애니메이션이 끝난 후 실행되는 이벤트입니다. [Completed](#completed) |
+| useScrollRestoration | Boolean | false | Chrome 46+에서 스크롤 위치를 기억했다가 자동으로 복원하는 기능의 사용여부입니다.<br>이 기능을 사용하시면 `canvas`가 제대로 그려지지 않을 수 있습니다. |
+
+### Default wrapStyle
+
+```json
+{
+    "position": "relative"
+}
+```
 
 ## Event
 

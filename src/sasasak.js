@@ -1,14 +1,9 @@
-const html2canvas = require('html2canvas')
-const pageOriginOffset = { left: 0, top: 0 }
+import html2canvas from 'html2canvas'
 
-// Chrome 46+에서 스크롤 위치를 기억 못하게 하기
-if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual'
-}
+const pageOriginOffset = { left: 0, top: 0 }
 
 class SaSaSakJs {
     constructor(el, option = null) {
-        let hasOption = option && typeof option === 'object'
         this.isMounted = false
         this.isPlaying = false
         this.isComplete = false
@@ -16,10 +11,8 @@ class SaSaSakJs {
         this.wrapEl = null
         this.canvas = null
         this.ctx = null
-        this.option = {}
-        this.defaultWrapStyle = {
-            position: 'relative',
-        }
+        this._option = {}
+        this.option = option
         this.lineMaxLength = 0
         this.lineMinLength = 0
         this.lastRotate = 0
@@ -37,13 +30,46 @@ class SaSaSakJs {
             return
         }
 
-        if (hasOption) {
-            if (option.wrapStyle && typeof option.wrapStyle === 'object') this.option.wrapStyle = option.wrapStyle
-            if (option.mounted && typeof option.mounted === 'function') this.option.mounted = option.mounted.bind(this)
-            if (option.completed && typeof option.completed === 'function') this.option.completed = option.completed.bind(this)
+        this.init()
+    }
+
+    get defaultOptions() {
+        return {
+            wrapStyle: {
+                position: 'relative',
+            },
+            useScrollRestoration: false,
+            mounted: () => null,
+            completed: () => null,
+       }
+    }
+    get option() {
+        return this._option
+    }
+    set option(option) {
+        if (!option || typeof option !== 'object') option = {}
+
+        // wrapStyle
+        let wrapStyle = option.wrapStyle && typeof option.wrapStyle === 'object' ? option.wrapStyle : {}
+        this._option.wrapStyle = {
+            ...this.defaultOptions.wrapStyle,
+            ...wrapStyle,
         }
 
-        this.init()
+        // Chrome 46+에서 스크롤 위치를 기억 못하게 하기
+        this._option.useScrollRestoration = typeof option.useScrollRestoration === 'undefined'
+            ? this.defaultOptions.useScrollRestoration
+            : option.useScrollRestoration
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = this._option.useScrollRestoration === true ? 'auto' : 'manual'
+        }
+
+        this._option.mounted = option.mounted && typeof option.mounted === 'function'
+            ? option.mounted.bind(this)
+            : this.defaultOptions.mounted
+        this._option.completed = option.completed && typeof option.completed === 'function'
+            ? option.completed.bind(this)
+            : this.defaultOptions.completed
     }
 
     async init() {
@@ -57,7 +83,7 @@ class SaSaSakJs {
         await this.createCanvas()
         this.wrapEl.classList.add('sasasak-mounted')
         this.isMounted = true
-        if (typeof this.option.mounted === 'function') this.option.mounted()
+        this.option.mounted()
 
         // after
         document.body.style.overflow = ''
@@ -67,12 +93,9 @@ class SaSaSakJs {
         if (this.isMounted) return
         this.wrapEl = document.createElement('div')
         this.wrapEl.classList.add('sasasak')
-        let wrapStyle = {
-            ...this.defaultWrapStyle,
-            ...this.option.wrapStyle,
-        }
-        for (let key in wrapStyle) {
-            if (key in this.wrapEl.style) this.wrapEl.style[key] = wrapStyle[key]
+
+        for (let key in this.option.wrapStyle) {
+            if (key in this.wrapEl.style) this.wrapEl.style[key] = this.option.wrapStyle[key]
             else console.error(key, '지원하지 않는 속성')
         }
 
@@ -193,7 +216,7 @@ class SaSaSakJs {
         this.isComplete = true
         this.imageData.total = 0
         this.imageData.alphaKeys = []
-        if (typeof this.option.completed === 'function') this.option.completed()
+        this.option.completed()
     }
 }
 
