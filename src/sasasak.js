@@ -1,4 +1,5 @@
 import html2canvas from 'html2canvas'
+import Benchmark from './benchmark'
 
 const privateOptions = {
     pageOriginOffset: { left: 0, top: 0 },
@@ -27,7 +28,7 @@ class SaSaSakJs {
             total: 0,
             alphaKeys: [],
         }
-        this.logData = {}
+        this.benchmark = new Benchmark(this.option.useBenchmark)
 
         if (el && typeof el === 'object') {
             this.el = el
@@ -53,7 +54,7 @@ class SaSaSakJs {
             completionRate: 0.6,
             maxCountOfOnceScratch: 1000,
             useScrollRestoration: false,
-            showLog: process.env.NODE_ENV !== 'production',
+            useBenchmark: process.env.NODE_ENV !== 'production',
             mounted: () => null,
             completed: () => null,
        }
@@ -92,7 +93,7 @@ class SaSaSakJs {
             history.scrollRestoration = this._option.useScrollRestoration === true ? 'auto' : 'manual'
         }
 
-        this._option.showLog = typeof option.showLog === 'boolean' ? option.showLog : this.defaultOptions.showLog
+        this._option.useBenchmark = typeof option.useBenchmark === 'boolean' ? option.useBenchmark : this.defaultOptions.useBenchmark
 
         this._option.mounted = option.mounted && typeof option.mounted === 'function'
             ? option.mounted.bind(this)
@@ -103,6 +104,8 @@ class SaSaSakJs {
     }
 
     async _init() {
+        let benchmark = this.benchmark.set('init')
+
         // beforeCreate
         privateOptions.generatingCnt++
         if (privateOptions.generatingCnt === 1) {
@@ -126,6 +129,8 @@ class SaSaSakJs {
         this.wrapEl.classList.add('sasasak-mounted')
         this.isMounted = true
         this.option.mounted()
+
+        benchmark()
     }
 
     _createWrapper() {
@@ -185,9 +190,10 @@ class SaSaSakJs {
     }
 
     _checkEmptyCanvas() {
-        let logData = this._setLogData('_checkEmptyCanvas')
+        let benchmark = this.benchmark.set('canvas에 남아있는 픽셀 계산')
         let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
         let remainingPixelCnt = 0
+        let result = false
 
         if (!this.imageData.total) {
             let alphas = imageData.data.filter((row, key) => {
@@ -205,15 +211,14 @@ class SaSaSakJs {
                 return cnt
             }, 0)
         }
-        logData()
-        this._setLogData('_checkEmptyCanvas_result')({
+        result = this.imageData.total * (1 - this.option.completionRate) > remainingPixelCnt
+        benchmark({
             total: this.imageData.total,
             remains: remainingPixelCnt,
             percent: Math.floor((remainingPixelCnt / this.imageData.total) * 100),
-            end: this.imageData.total * (1 - this.option.completionRate) > remainingPixelCnt,
+            end: result,
         })
-
-        return this.imageData.total * (1 - this.option.completionRate) > remainingPixelCnt
+        return result
     }
 
     _completed() {
@@ -222,14 +227,14 @@ class SaSaSakJs {
         this.imageData.total = 0
         this.imageData.alphaKeys = []
         this.option.completed()
-        this._printLogData()
+        this.benchmark.print()
     }
 
     _scratch(cnt = 0) {
         cnt += Math.floor(this.option.maxCountOfOnceScratch / 10)
         if (cnt > this.option.maxCountOfOnceScratch) cnt = this.option.maxCountOfOnceScratch
 
-        let logData = this._setLogData('_scratch')
+        let benchmark = this.benchmark.set('scratch 실행 횟수')
         for (let index = 0; index < cnt; index++) {
             let random = Math.random()
             let _percent = Math.floor(random * 100) % 20 + 1
@@ -255,7 +260,7 @@ class SaSaSakJs {
             this.ctx.stroke()
             this.ctx.closePath()
         }
-        logData({ drawnStrokeCount: cnt })
+        benchmark({ drawnStrokeCount: cnt })
 
         cnt += Math.floor(cnt * 1.5)
 
@@ -269,50 +274,12 @@ class SaSaSakJs {
         }
     }
 
-    _resetLogData() {
-        if (!this.option.showLog) return
-        Object.keys(this.logData).forEach(key => {
-            this.logData[key] = []
-        })
-    }
-    _setLogData(label) {
-        let ms = Date.now()
-        if (!(label in this.logData)) this.logData[label] = []
-        return (value) => {
-            if (this.option.showLog) {
-                let msg = `${Date.now() - ms}ms`
-                if (!value) {
-                    value = { time: msg }
-                } else if (typeof value === 'object') {
-                    if (Array.isArray(value)) {
-                        value.push(msg)
-                    } else {
-                        value['time'] = msg
-                    }
-                } else {
-                    value = {
-                        value,
-                        time: msg,
-                    }
-                }
-                this.logData[label].push(value)
-            }
-        }
-    }
-    _printLogData() {
-        if (!this.option.showLog) return
-        for (let key in this.logData) {
-            console.log(key, this.logData[key].reduce((sum, row) => sum + parseFloat(row.time), 0) + 'ms')
-            console.table(this.logData[key])
-        }
-    }
-
     play() {
         if (!this.isMounted) return 'is_not_mounted'
         if (this.isPlaying) return 'is_playing'
         if (this.isComplete) return 'is_complete'
         this.isPlaying = true
-        this._resetLogData()
+        this.benchmark.clear()
         this._scratch()
     }
 }
