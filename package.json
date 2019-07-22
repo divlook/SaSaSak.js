@@ -1,6 +1,6 @@
 {
   "name": "sasasak",
-  "version": "1.0.0",
+  "version": "1.0.1-0",
   "description": "Element를 사사삭! 하고 지워보자",
   "author": "uihyeon.cha",
   "repository": {
@@ -8,8 +8,14 @@
     "url": "git@github.com:divlook/SaSaSak.js.git"
   },
   "license": "MIT",
-  "keywords": ["canvas", "html2canvas", "scratch"],
-  "engines": { "node": ">= 8.0.0" },
+  "keywords": [
+    "canvas",
+    "html2canvas",
+    "scratch"
+  ],
+  "engines": {
+    "node": ">= 8.0.0"
+  },
   "main": "src/sasasak.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
