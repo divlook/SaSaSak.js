@@ -44,7 +44,7 @@ $ npm run start
 
 ### Use module
 
-Module 방식은 [NodeJs](https://nodejs.org)를 사용한 컴파일이 필요합니다.<br>컴파일 된 파일만 필요하신 분은 [Use script tag](use-script-tag) 방식을 사용해주세요.
+Module 방식은 [NodeJs](https://nodejs.org)를 사용한 컴파일이 필요합니다.<br>컴파일 된 파일만 필요하신 분은 [Use script tag](#use-script-tag) 방식을 사용해주세요.
 
 ```bash
 npm install sasasak
