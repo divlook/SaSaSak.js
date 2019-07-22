@@ -18,7 +18,7 @@ SaSaSak.js는 [html2canvas](https://html2canvas.hertzen.com/) 라이브러리를
 
 - https://divlook.github.io/SaSaSak.js
 
-## Scripts
+## Run
 
 ```
 $ npm install --only=prod
@@ -40,20 +40,32 @@ $ npm run build
 $ npm run start
 ```
 
-## USE
+## Use
+
+### Use module
+
+Module 방식은 [NodeJs](https://nodejs.org)를 사용한 컴파일이 필요합니다.<br>컴파일 된 파일만 필요하신 분은 [Use script tag](use-script-tag) 방식을 사용해주세요.
+
+```bash
+npm install sasasak
+```
 
 ```js
-new SaSaSakJs(Element [, Options])
-```
-| 이름 | 타입 | 설명 |
-| - | - | - |
-| Element | HTMLElement or String | Element는 필수 인자값이며, <br>`document.querySelector('.sasasak')` 또는 `".sasasak"` 이런식으로 입력하시면 됩니다.|
-| Options | Object | [Options](#options) |
+import SaSaSakJs from 'sasasak'
 
-## 예제
+// or
+
+var SaSaSakJs = require('sasasak').default
+```
+
+### Use script tag
+
+SaSaSak.js 파일을 [다운로드]((https://github.com/divlook/SaSaSak.js/archive/master.zip)) 받은 후 `dist/js/sasasak.min.js` 파일을 찾습니다.
+
+이 파일을 본인의 프로젝트 경로에 복사한 뒤 아래와 같이 사용합니다.
 
 ```html
-<script type="text/javascript" src="dist/js/sasasak.min.js"></script>
+<script type="text/javascript" src="project_path/sasasak.min.js"></script>
 
 <script>
     var sasasak = new SaSaSakJs(document.querySelector('.sasasak'), {
@@ -70,7 +82,17 @@ new SaSaSakJs(Element [, Options])
 </script>
 ```
 
-## Options
+## Guide
+
+```js
+new SaSaSakJs(Element [, Options])
+```
+| 이름 | 타입 | 설명 |
+| - | - | - |
+| Element | HTMLElement or String | Element는 필수 인자값이며, <br>`document.querySelector('.sasasak')` 또는 `".sasasak"` 이런식으로 입력하시면 됩니다.|
+| Options | Object | [Options](#options) |
+
+### Options
 
 | 이름 | 타입 | 기본값 | 설명 |
 | - | - | - | - |
@@ -85,7 +107,7 @@ new SaSaSakJs(Element [, Options])
 | useScrollRestoration | Boolean | false | Chrome 46+에서 스크롤 위치를 기억했다가 자동으로 복원하는 기능의 사용여부입니다.<br>이 기능을 사용하시면 `canvas`가 제대로 그려지지 않을 수 있습니다. |
 | showLog | Boolean | false | Chrome console에서 play 애니메이션의 로그를 볼 수 있습니다. |
 
-### Default wrapStyle
+#### Default wrapStyle
 
 ```json
 {
@@ -93,11 +115,11 @@ new SaSaSakJs(Element [, Options])
 }
 ```
 
-## Event
+### Event
 
 모든 이벤트는 정해진 상황에 발생하며 `this`를 통해 SaSaSakJs 인스턴스에 접근할 수 있습니다.
 
-### Mounted
+#### Mounted
 
 `mounted`는 `canvas`가 완전히 그려진 후 실행됩니다.
 
@@ -112,7 +134,7 @@ new SaSaSakJs(document.querySelector('.sasasak'), {
 })
 ```
 
-### Completed
+#### Completed
 
 `play`가 끝난 후 실행됩니다.
 
@@ -125,7 +147,7 @@ new SaSaSakJs(document.querySelector('.sasasak'), {
 })
 ```
 
-## Property
+### Property
 
 | 이름 | 타입 | |
 | - | - | - |
@@ -135,9 +157,9 @@ new SaSaSakJs(document.querySelector('.sasasak'), {
 | wrapEl | Element | canvas를 감싸고 있는 Element.<br>`sasasak` className을 가지고 있으며 mounted시 `sasasak-mounted` className이 추가 됩니다. |
 | canvas | Element | |
 
-## Methods
+### Methods
 
-### sasasak.play()
+#### sasasak.play()
 
 애니메이션을 시작합니다
 
