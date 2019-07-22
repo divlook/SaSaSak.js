@@ -1,7 +1,16 @@
 {
-  "name": "sasasak.js",
+  "name": "sasasak",
   "version": "1.0.0",
-  "description": "",
+  "description": "Element를 사사삭! 하고 지워보자",
+  "author": "uihyeon.cha",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:divlook/SaSaSak.js.git"
+  },
+  "license": "MIT",
+  "keywords": ["canvas", "html2canvas", "scratch"],
+  "engines": { "node": ">= 8.0.0" },
+  "main": "src/sasasak.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "serve dist",
@@ -10,8 +19,6 @@
     "predeploy": "cross-env NODE_ENV=production BUILD_PATH=build npm run build",
     "deploy": "gh-pages -d build"
   },
-  "author": "uihyeon.cha",
-  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
