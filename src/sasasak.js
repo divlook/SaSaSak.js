@@ -236,18 +236,17 @@ class SaSaSakJs {
 
         let benchmark = this.benchmark.set('scratch 실행 횟수')
         for (let index = 0; index < cnt; index++) {
-            let random = Math.random()
-            let _percent = Math.floor(random * 100) % 20 + 1
-            let _plusMinus = Math.floor(random * 10) % 2 === 0 ? 1 : -1
+            let _percent = Math.floor(Math.random() * 100) % 20 + 1
+            let _plusMinus = Math.floor(Math.random() * 10) % 2 === 0 ? 1 : -1
             let _zero = Math.pow(10, (this.strokeMaxLength.toString().length - 1))
 
-            let strokeWidth = (this.strokeMaxWidth - this.strokeMinWidth) / 10 * (Math.floor(random * 10) + 1) * window.devicePixelRatio
+            let strokeWidth = (this.strokeMaxWidth - this.strokeMinWidth) / 10 * (Math.floor(Math.random() * 10) + 1) * window.devicePixelRatio
             let strokeLength = this.strokeMaxLength + this.strokeMaxLength * (_percent/100) * _plusMinus
-            let x = Math.floor(random * _zero * 10) % this.strokeMaxLength * (_percent/100) * -3
-            let y = Math.floor(random * _zero * 10) % this.strokeMaxLength + 1 + Math.floor(this.strokeMaxLength / 100) * (_percent/100)
+            let x = Math.floor(Math.random() * _zero * 10) % this.strokeMaxLength * (_percent/100) * -3
+            let y = Math.floor(Math.random() * _zero * 10) % this.strokeMaxLength + 1 + Math.floor(this.strokeMaxLength / 100) * (_percent/100)
 
-            let strokeRotate = (365 - (Math.floor(random * 1000) % (this.strokeMaxRotate - this.strokeMinRotate) + this.strokeMinRotate)) * Math.PI / 180
-            let strokeAlpha = Math.floor(random * 10) / 10
+            let strokeRotate = (365 - (Math.floor(Math.random() * 1000) % (this.strokeMaxRotate - this.strokeMinRotate) + this.strokeMinRotate)) * Math.PI / 180
+            let strokeAlpha = Math.floor(Math.random() * 10) / 10
 
             this.ctx.globalAlpha = strokeAlpha
             this.ctx.lineWidth = strokeWidth
