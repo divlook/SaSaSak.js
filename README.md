@@ -105,7 +105,7 @@ new SaSaSakJs(Element [, Options])
 | completionRate | Number | 0.6 | play 애니메이션을 종료할 완성도. (범위: 0 < completionRate <= 1) |
 | completed | Function | | play 애니메이션이 끝난 후 실행되는 이벤트입니다. [Completed](#completed) |
 | useScrollRestoration | Boolean | false | Chrome 46+에서 스크롤 위치를 기억했다가 자동으로 복원하는 기능의 사용여부입니다.<br>이 기능을 사용하시면 `canvas`가 제대로 그려지지 않을 수 있습니다. |
-| showLog | Boolean | false | Chrome console에서 play 애니메이션의 로그를 볼 수 있습니다. |
+| useBenchmark | Boolean | false | Chrome console에서 play 애니메이션의 로그를 볼 수 있습니다. |
 
 #### Default wrapStyle
 
