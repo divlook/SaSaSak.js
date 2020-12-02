@@ -47,15 +47,15 @@ $ npm run start
 Module 방식은 [NodeJs](https://nodejs.org)를 사용한 컴파일이 필요합니다.<br>컴파일 된 파일만 필요하신 분은 [Use script tag](#use-script-tag) 방식을 사용해주세요.
 
 ```bash
-npm install sasasak
+npm install @divlook/sasasak
 ```
 
 ```js
-import SaSaSakJs from 'sasasak'
+import SaSaSakJs from '@divlook/sasasak'
 
 // or
 
-var SaSaSakJs = require('sasasak').default
+var SaSaSakJs = require('@divlook/sasasak').default
 ```
 
 ### Use script tag

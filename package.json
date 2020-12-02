@@ -1,11 +1,11 @@
 {
-  "name": "sasasak",
+  "name": "@divlook/sasasak",
   "version": "1.0.3",
   "description": "Element를 사사삭! 하고 지워보자",
   "author": "uihyeon.cha",
   "repository": {
     "type": "git",
-    "url": "git@github.com:divlook/SaSaSak.js.git"
+    "url": "git+ssh://git@github.com/divlook/SaSaSak.js.git"
   },
   "license": "MIT",
   "keywords": [
@@ -48,5 +48,9 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "serve": "^11.3.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/divlook/SaSaSak.js/issues"
+  },
+  "homepage": "https://github.com/divlook/SaSaSak.js#readme"
 }
